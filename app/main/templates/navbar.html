@@ -68,9 +68,10 @@
                     <label class="form-label">Username</label>
                     <input type="text" name="username" class="form-control" placeholder="Enter username" required>
                 </div>
-                <div class="mb-3">
+                <div class="mb-3 position-relative">
                     <label class="form-label">Password</label>
-                    <input type="password" name="password" class="form-control" placeholder="Enter password" required>
+                    <input type="password" name="password" id="LoginPasswordInput" class="form-control" placeholder="Enter password" required>
+                    <i class="toggle-password bi bi-eye-slash" style="position: absolute; top: 55%; right: 15px; cursor: pointer;" onclick="togglePassword('LoginPasswordInput', 'LoginToggleIcon')"></i>
                 </div>
                 <button type="submit" class="btn btn-primary w-100" style="background-color: deeppink;">Login</button>
             </form>
@@ -106,16 +107,36 @@
                     <label class="form-label">Username</label>
                     <input type="text" name="username" class="form-control" placeholder="Enter username" required>
                 </div>
-                <div class="mb-3">
+                <div class="mb-3 position-relative">
                     <label class="form-label">Password</label>
-                    <input type="password" name="password" class="form-control" placeholder="Enter password" required>
+                    <input type="password" name="password" id="RegisterPasswordInput" class="form-control" placeholder="Enter password" required>
+                    <i class="toggle-password bi bi-eye-slash" style="position: absolute; top: 55%; right: 15px; cursor: pointer;"  onclick="togglePassword('RegisterPasswordInput', 'RegisterToggleIcon')"></i>
                 </div>
+                
+                <!-- Add Bootstrap Icons -->
+                <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">                
                 <button type="submit" class="btn btn-success w-100" style="background-color: deeppink;" >Register</button>
             </form>
         </div>
     </div>
 </div>
-
+<script>
+    function togglePassword(passwordInputId, toggleIconId) {
+        const passwordInput = document.getElementById(passwordInputId);
+        const toggleIcon = document.getElementById(toggleIconId);
+    
+        if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+            toggleIcon.classList.remove('bi-eye-slash');
+            toggleIcon.classList.add('bi-eye');
+        } else {
+            passwordInput.type = "password";
+            toggleIcon.classList.remove('bi-eye');
+            toggleIcon.classList.add('bi-eye-slash');
+        }
+    }
+    </script>
+    
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
