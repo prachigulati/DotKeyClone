@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div style="background: linear-gradient(to right, #f9d, #ccf); text-align:center; font-size:18px;">
+    <img src="https://www.dotandkey.com/cdn/shop/files/timer-web_0da49c9c-543a-4bba-93fe-161b0091848b.png?v=1742819360&width=2000" style="max-width: 500px;">
+</div>
+<img src="{% static 'assets/bestsellers.jpg' %}" style="width: 100%;">
+
+<section style="background-color: white;">
+  <center><div style="font-weight: bold;font-size: 40px;margin-top: 50px;">Bestsellers</div></center>
+  <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+
+  <div class="product-grid">
+    {% for product in products %}
+      <div class="product-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+        
+        <div style="background: #ff5c5c; color: white; padding: 4px 10px; font-size: 12px; font-weight: bold;">
+          {{ product.tag }} ⭐
+        </div>
+        <img src="{{ product.image.url }}" alt="{{ product.name }}">
+
+        <div class="content" style="padding: 16px; flex-grow: 1;">
+          <div style="font-weight: 600; font-size: 16px; margin: 8px 0;">{{ product.name }}</div>
+          <div style="font-size: 12px; color: #555;">✔ {{ product.description }}</div>
+          <div style="margin-top: 6px;">
+            <span style="background: #4CAF50; color: white; font-size: 14px; padding: 2px 6px; border-radius: 4px; margin-right: 6px;">{{ product.rating }}</span>
+            <span style="font-size: 12px; color: #555;">{{ product.rating_next }}</span>
+          </div>
+          <div>
+            <button style="background: white; border: 1px solid black; padding: 4px 10px; border-radius: 4px; font-size: 14px; margin: 10px 0;">{{ product.weight }}</button>
+          </div>
+          {% if product.is_sale %}
+            <div style="background: linear-gradient(to right, rgb(249, 154, 219), white); font-size: 16px; padding: 4px; border-radius: 4px; margin: 10px 0;">Flat {{ sale_percentage }}% OFF</div>
+          {% endif %}
+          <div style="font-size: 18px; font-weight: bold;">₹{{ product.price }}</div>
+        </div>
+
+        <!-- Add to Cart Button -->
+        <div class="card-bottom" style="padding: 0 16px 16px 16px;">
+          <button class="btn-cart-action add-to-cart-btn" data-product-id="{{ product.id }}" data-product-qty="1"
+            style="width: 100%; margin-top: 10px; background: black; color: white; padding: 14px; border: none; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer;">
+            ADD TO CART
+          </button>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+  <style>
+    .product-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 32px;
+      padding: 20px 100px; 
+    }
+
+    .product-card {
+      width: 23%;
+      background: #fff;
+      border: 1px solid #eee;
+      border-radius: 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+      min-height: 530px;
+    }
+
+    .product-card img {
+      width: 100%;
+      display: block;
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+    }
+  </style>
+
+</section>
+
+<script>
+    function loadCart() {
+        fetch("{% url 'cart_offcanvas' %}")
+            .then(res => res.text())
+            .then(data => {
+                document.querySelector("#offcanvasCart .offcanvas-body").innerHTML = data;
+            });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const buttons = document.querySelectorAll('.add-to-cart-btn');
+        buttons.forEach(function(button) {
+            button.addEventListener('click', function () {
+                const productId = this.dataset.productId;
+                const productQty = this.dataset.productQty || 1;
+                const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    
+                fetch("{% url 'cart_add' %}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-CSRFToken': csrfToken,
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: new URLSearchParams({
+                        'product_id': productId,
+                        'product_qty': productQty
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        alert('Added to cart!');
+                        loadCart();
+                        window.location.reload();
+                        const cartCanvas = new bootstrap.Offcanvas('#offcanvasCart');
+                        cartCanvas.show();
+                    } else {
+                        alert(data.error || 'Something went wrong');
+                    }
+                });
+            });
+        });
+    });
+</script>
+
+{% endblock %}

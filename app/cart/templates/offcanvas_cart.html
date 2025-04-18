@@ -1,0 +1,84 @@
+{% load static %}
+{% load cart_extras %}
+
+{% for product in cart_products %}
+<div class="d-flex align-items-start mb-4">
+    <img src="{{ product.image.url }}" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; margin-right: 10px;">
+    <div class="flex-grow-1">
+        <h6 class="mb-1">{{ product.name }}</h6>
+        <p class="text-muted mb-1" style="font-size: 14px;">Size: {{ product.size }}</p>
+        <div class="d-flex justify-content-between align-items-center">
+            <p class="mb-0">₹{{ product.sale_price|default:product.price }}</p>
+            <div class="d-flex align-items-center">
+                <form method="POST" action="#">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="post">
+                    <input type="hidden" name="product_id" value="{{ product.id }}">
+                    <button class="btn btn-sm btn-light" name="product_qty" value="{{ quantities|get_item:product.id|add:'-1' }}">-</button>
+                    <span class="mx-2">{{ quantities|get_item:product.id }}</span>
+                    <button class="btn btn-sm btn-light" name="product_qty" value="{{ quantities|get_item:product.id|add:'1' }}">+</button>
+                </form>
+                <form method="POST" action="#" class="ms-2">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="post">
+                    <input type="hidden" name="product_id" value="{{ product.id }}">
+                    <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% empty %}
+    <p>Your cart is empty.</p>
+{% endfor %}
+
+<div class="border-top pt-3 mt-3">
+    <h5>Total: ₹{{ totals }}</h5>
+</div>
+<!-- Your normal page content above -->
+
+<!-- Place this before closing body -->
+<script>
+
+    function refreshCart() {
+        fetch('/cart/offcanvas/')
+        .then(response => response.text())
+        .then(html => {
+            document.getElementById('cart-items-container').innerHTML = html;
+            attachCartActions(); // Reattach after reload
+        });
+    }
+
+    function attachCartActions() {
+        document.querySelectorAll('.cart-action-form').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                fetch(form.action, {
+                    method: 'POST',
+                    body: new FormData(form),
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        refreshCart();
+                    } else {
+                        alert('Something went wrong.');
+                    }
+                });
+            });
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        attachCartActions(); // First time attach
+    });
+
+
+    </script>
+    
+    </body>
+    </html>
+    
