@@ -1,10 +1,12 @@
-from django.http import JsonResponse
+from django.http import JsonResponse,HttpResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from main.models import Product, Profile
 from main.models import Cart, CartItem
+from django.views.decorators.http import require_POST
+from django.template.loader import render_to_string
 
 @csrf_exempt
 @login_required
@@ -36,7 +38,6 @@ def cart_items_api(request):
     if request.user.is_authenticated:
         cart = Cart.objects.filter(profile__user=request.user, active=True).first()
         items = cart.items.select_related('product').all() if cart else []
-
         data = []
         for item in items:
             data.append({
@@ -60,39 +61,6 @@ def cart_summary(request):
     return render(request, "cart_summary.html", {"cart_products": cart_products, "quantities": quantities, "totals": totals})
 
 
-# def cart_delete(request):
-#     cart = Cart(request)
-#     if request.POST.get('action') == 'post':
-#         product_id = str(request.POST.get('product_id'))  # Ensure it's a string
-#         cart.delete(product_id)  # Delete the product from the cart
-#         cart.save_session_and_profile()  # Make sure the session and profile are updated
-#         return JsonResponse({'status': 'success', 'product_deleted': product_id})
-    
-
-# # For updating product quantity in the cart
-# def cart_update(request):
-#     cart = Cart(request)
-#     if request.POST.get('action') == 'post':
-#         product_id = request.POST.get('product_id')  # Get the product ID
-#         product_qty = request.POST.get('product_qty')  # Get the product quantity
-        
-#         if product_id and product_qty and product_qty.isdigit():
-#             product_id = str(product_id)  # Convert to string
-#             product_qty = int(product_qty)  # Convert to integer
-            
-#             if product_qty <= 0:
-#                 return JsonResponse({'error': 'Quantity must be greater than 0.'}, status=400)
-            
-#             # Call the update method
-#             cart.update(product_id, product_qty)  # Update cart with new quantity
-            
-#             return JsonResponse({'qty': product_qty})  # Return updated quantity
-            
-#         else:
-#             return JsonResponse({'error': 'Invalid product ID or quantity'}, status=400)
-        
-        
-
 def cart_offcanvas(request):
     # Ensure the cart is filtered by the user through the profile
     cart = Cart.objects.filter(profile__user=request.user, active=True).first()
@@ -112,3 +80,131 @@ def cart_offcanvas(request):
         'quantities': quantities,
         'totals': totals,
     })
+
+
+
+@csrf_exempt 
+def update_cart(request):
+    if request.method == 'POST':
+        try:
+            product_id = request.POST.get('product_id')  # Get the product ID from the form
+            action = request.POST.get('action')  # The action (subtract, add, remove)
+            quantity = int(request.POST.get('quantity', 1))  # The quantity to add or subtract
+
+            product = Product.objects.get(id=product_id)
+            cart = Cart.objects.get(profile__user=request.user, active=True)
+            cart_item = CartItem.objects.get(cart=cart, product=product)
+
+            if action == 'add':
+                cart_item.quantity += quantity
+            elif action == 'subtract':
+                cart_item.quantity -= quantity
+                if cart_item.quantity <= 0:
+                    cart_item.delete()
+            elif action == 'remove':
+                cart_item.delete()
+
+            cart_item.save()
+            return JsonResponse({'status': 'success'})
+        except Product.DoesNotExist:
+            return JsonResponse({'status': 'error', 'error': 'Product not found'})
+        except Cart.DoesNotExist:
+            return JsonResponse({'status': 'error', 'error': 'Cart not found'})
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'error': str(e)})
+
+    return JsonResponse({'status': 'error', 'error': 'Invalid request'})
+
+
+
+
+# def checkout(request):
+#     profile = request.user.profile  # get profile of logged-in user
+#     try:
+#         cart = Cart.objects.get(profile=profile, active=True)  # get active cart
+#         cart_items = cart.items.all()  # get all items linked to the cart
+#     except Cart.DoesNotExist:
+#         cart_items = []  # if no cart, empty list
+#     total_price = sum(item.product.price * item.quantity for item in cart_items)
+#     context = {
+#         'cart_items': cart_items,
+#         'total_price': total_price,
+#     }
+#     return render(request, 'checkout.html', context)
+
+
+
+# def checkout(request):
+#     profile = request.user.profile
+
+#     try:
+#         cart = Cart.objects.get(profile=profile, active=True)
+#         cart_items = cart.items.all()
+#     except Cart.DoesNotExist:
+#         cart_items = []
+
+#     total_price = sum(item.product.price * item.quantity for item in cart_items)
+
+#     # Handle form submissions
+#     if request.method == 'POST':
+#         mobile_number = request.POST.get('mobile_number')
+
+#         if mobile_number:
+#             profile.phone = mobile_number
+#             profile.save()
+#             return redirect('checkout_address')  # Go to address step
+
+#     context = {
+#         'cart_items': cart_items,
+#         'total_price': total_price,
+#     }
+#     return render(request, 'checkout.html', context)
+
+def checkout(request):
+    profile = request.user.profile
+
+    try:
+        cart = Cart.objects.get(profile=profile, active=True)
+        cart_items = cart.items.all()
+    except Cart.DoesNotExist:
+        cart_items = []
+
+    total_price = sum(item.product.price * item.quantity for item in cart_items)
+
+    # Get the current step from session, default to 1
+    step = request.session.get('checkout_step', 1)
+
+    if request.method == 'POST':
+        action = request.POST.get('action')  # We use "action" value now
+
+        if action == 'save_mobile':
+            # Save mobile number
+            profile.phone = request.POST.get('mobile_number')
+            profile.save()
+            request.session['checkout_step'] = 2  # Move to Address Step
+            return redirect('cart:checkout')  # Refresh page to show step 2
+
+        elif action == 'save_address':
+            # Save address info
+            profile.address1 = request.POST.get('address1')
+            profile.address2 = request.POST.get('address2')
+            profile.city = request.POST.get('city')
+            profile.state = request.POST.get('state')
+            profile.zipcode = request.POST.get('zipcode')
+            profile.country = request.POST.get('country')
+            profile.save()
+            request.session['checkout_step'] = 1  # Optional: reset step or go to payment
+            return redirect('checkout_payment')  # Redirect to payment
+
+        elif action == 'go_back':
+            # Go back to mobile number step
+            request.session['checkout_step'] = 1
+            return redirect('cart:checkout')
+
+    context = {
+        'cart_items': cart_items,
+        'total_price': total_price,
+        'step': step,
+        'profile': profile,
+    }
+    return render(request, 'checkout.html', context)

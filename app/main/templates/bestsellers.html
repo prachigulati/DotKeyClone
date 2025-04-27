@@ -78,7 +78,7 @@
 
 <script>
     function loadCart() {
-        fetch("{% url 'cart_offcanvas' %}")
+        fetch("{% url 'cart:cart_offcanvas' %}")
             .then(res => res.text())
             .then(data => {
                 document.querySelector("#offcanvasCart .offcanvas-body").innerHTML = data;
@@ -93,7 +93,7 @@
                 const productQty = this.dataset.productQty || 1;
                 const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
     
-                fetch("{% url 'cart_add' %}", {
+                fetch("{% url 'cart:cart_add' %}", {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded',

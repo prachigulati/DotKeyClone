@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Checkout</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+
+    <div class="bg-white shadow-lg rounded-lg flex w-[90%] max-w-5xl overflow-hidden">
+        <!-- Left: Order Summary -->
+        <div class="w-1/3 bg-gray-50 p-6 flex flex-col justify-between">
+            <div>
+                <h2 class="text-xl font-semibold mb-4">Order Summary</h2>
+
+                {% for item in cart_items %}
+                <div class="flex items-center mb-4">
+                    <img src="{{ item.product.image.url }}" alt="Product" class="w-16 h-16 mr-4 object-cover rounded">
+                    <div>
+                        <p class="font-semibold">{{ item.product.name }}</p>
+                        <p class="text-gray-500 text-sm">Quantity: {{ item.quantity }}</p>
+                        <p class="text-gray-700 font-semibold">₹{{ item.product.price }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+
+                <div class="border-t pt-4 mt-4">
+                    <div class="flex justify-between">
+                        <span>Subtotal</span>
+                        <span>₹{{ total_price }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>Shipping</span>
+                        <span>Free</span>
+                    </div>
+                    <div class="flex justify-between font-bold text-lg mt-2">
+                        <span>Total</span>
+                        <span>₹{{ total_price }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right: Checkout Steps -->
+        <div class="w-2/3 p-8">
+            <!-- Step Indicator -->
+            <div class="flex items-center mb-6 space-x-2">
+                {% if step == 1 %}
+                    <div class="w-8 h-8 rounded-full bg-black text-white flex items-center justify-center">1</div>
+                    <span class="font-semibold">Contact</span>
+                    <span>→</span>
+                    <span class="text-gray-400">Address</span>
+                    <span>→</span>
+                    <span class="text-gray-400">Payment</span>
+                {% elif step == 2 %}
+                    <span class="text-gray-400">Contact</span>
+                    <span>→</span>
+                    <div class="w-8 h-8 rounded-full bg-black text-white flex items-center justify-center">2</div>
+                    <span class="font-semibold">Address</span>
+                    <span>→</span>
+                    <span class="text-gray-400">Payment</span>
+                {% endif %}
+            </div>
+
+            <!-- Contact Step -->
+            {% if step == 1 %}
+            <div>
+                <h2 class="text-2xl font-bold mb-4">Enter Mobile Number</h2>
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="flex items-center border rounded p-2 mb-4">
+                        <span class="mr-2">+91</span>
+                        <input type="text" name="mobile_number" placeholder="Mobile Number" class="w-full focus:outline-none" value="{{ profile.phone }}">
+                    </div>
+                    
+                    <div class="flex items-center mb-4">
+                        <input id="updates" name="updates" class="mr-2">
+                        <label for="updates"class="text-sm" style="margin-left: -185px;">Send me order updates and offers</label>
+                    </div>
+
+                    <button type="submit" name="action" value="save_mobile" class="bg-black text-white w-full py-2 rounded flex items-center justify-center">
+                        Confirm
+                    </button>
+                </form>
+            </div>
+
+            <!-- Address Step -->
+            <!-- Address Step -->
+        {% elif step == 2 %}
+        <div>
+            <h2 class="text-2xl font-bold mb-4">Enter Delivery Address</h2>
+            <form method="POST">
+                {% csrf_token %}
+                <div class="flex flex-col gap-4 mb-4">
+                    <input type="text" name="address1" placeholder="Address Line 1" class="border p-2 rounded" value="{{ profile.address1 }}">
+                    <input type="text" name="address2" placeholder="Address Line 2" class="border p-2 rounded" value="{{ profile.address2 }}">
+                    <input type="text" name="city" placeholder="City" class="border p-2 rounded" value="{{ profile.city }}">
+                    <input type="text" name="state" placeholder="State" class="border p-2 rounded" value="{{ profile.state }}">
+                    <input type="text" name="zipcode" placeholder="Zip Code" class="border p-2 rounded" value="{{ profile.zipcode }}">
+                    <input type="text" name="country" placeholder="Country" class="border p-2 rounded" value="{{ profile.country }}">
+                </div>
+
+                <div class="flex space-x-4">
+                    <button type="submit" name="action" value="go_back" class="border border-black text-black px-4 py-2 rounded">
+                        ← Go Back
+                    </button>
+                    <button type="submit" name="action" value="save_address" class="bg-black text-white px-4 py-2 rounded">
+                        Save & Continue
+                    </button>
+                </div>
+            </form>
+        </div>
+        {% endif %}
+        </div>
+    </div>
+
+</body>
+</html>
