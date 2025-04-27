@@ -3,10 +3,30 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from .models import Category, Product, Cart
+from django.http import JsonResponse
 
 # Home page
 def home(request):
     return render(request, 'home.html', {})
+
+
+
+#search bar
+def search_products(request):
+    query = request.GET.get('query', '')
+    products = Product.objects.filter(name__icontains=query) | Product.objects.filter(tag__icontains=query)
+    product_list = []
+
+    for product in products:
+        product_list.append({
+            'id': product.id,
+            'name': product.name,
+            'price': str(product.price),
+            'image': product.image.url,
+            'tag': product.tag,
+        })
+    
+    return JsonResponse({'products': product_list})
 
 # Best Sellers
 def bestsellers(request):

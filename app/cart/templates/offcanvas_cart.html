@@ -6,7 +6,7 @@
     <img src="{{ product.image.url }}" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; margin-right: 10px;">
     <div class="flex-grow-1">
         <h6 class="mb-1">{{ product.name }}</h6>
-        <p class="text-muted mb-1" style="font-size: 14px;">Size: {{ product.size }}</p>
+        <p class="text-muted mb-1" style="font-size: 14px;">Weight: {{ product.weight }}</p>
         <div class="d-flex justify-content-between align-items-center">
             <p class="mb-0">₹{{ product.sale_price|default:product.price }}</p>
             <div class="d-flex align-items-center">
