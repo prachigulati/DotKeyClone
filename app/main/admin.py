@@ -27,7 +27,7 @@ admin.site.register(User, UserAdmin)
 
 
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ('profile', 'cart', 'total_price', 'payment_method', 'order_status', 'created_at')
+    list_display = ('order_number','profile', 'cart', 'total_price', 'payment_method', 'order_status', 'created_at')
     list_editable = ('order_status',)  # <-- Editable directly from the list view
     readonly_fields = ('created_at', 'cart_items_display')  # <-- Include cart_items_display here
     list_filter = ('order_status', 'payment_method')

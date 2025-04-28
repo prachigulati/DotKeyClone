@@ -3,6 +3,7 @@
 {% for order in orders %}
 <div style="border: 1px solid #e0e0e0; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-radius: 12px; padding: 20px; margin-bottom: 30px; background: #fff;">
     <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3>Order {{ order.order_number }}</h3>
         <h3 style="margin: 0;">Placed on: {{ order.created_at_ist|date:"d M Y h:i A" }}</h3>
         <span style="padding: 6px 12px; background-color: #007bff; color: white; border-radius: 20px; font-size: 14px;">{{ order.order_status }}</span>
     </div>

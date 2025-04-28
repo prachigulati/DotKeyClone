@@ -3,6 +3,8 @@ import datetime
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.utils import timezone
+import random
+import string
 # Create your models here.
 
 
@@ -85,5 +87,22 @@ class Order(models.Model):
     order_status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Placed')
     created_at = models.DateTimeField(auto_now_add=True)  # Automatically set at order creation
     updated_at = models.DateTimeField(auto_now=True)      # Automatically updates on changes
+    order_number = models.CharField(max_length=20, unique=True, blank=True, null=True)
+    def save(self, *args, **kwargs):
+        if not self.order_number:
+            # Generate a unique 5-digit+ number starting with #
+            last_order = Order.objects.order_by('-id').first()
+            if last_order and last_order.order_number:
+                try:
+                    last_number = int(last_order.order_number.replace("#", ""))
+                    new_number = last_number + 1
+                except:
+                    new_number = 10000
+            else:
+                new_number = 10000
+            self.order_number = f"#{new_number}"
+        
+        super().save(*args, **kwargs)
+
     def __str__(self):
-        return f"Order #{self.id} - {self.profile.user.username} ({self.order_status})"
+        return f"{self.order_number} - {self.profile.user.username} ({self.order_status})"

@@ -10,4 +10,5 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout'),
     path('search/', views.search_products, name='search_products'),
     path('my-orders/', views.my_orders, name='my_orders'),
+    path('track-order/', views.track_order, name='track_order'),
 ]

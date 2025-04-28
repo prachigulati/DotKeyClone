@@ -1,0 +1,170 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Track Your Order</title>
+    <style>
+        body {
+            background: #f5f5f5;
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 80px auto;
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0 20px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: black;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        .order-details {
+            text-align: left;
+            margin-top: 20px;
+        }
+        .section {
+            margin-top: 30px;
+            background: #f0f0f0;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .error {
+            color: red;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        .order-header {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .product-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .product-item img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-right: 15px;
+        }
+        .product-info {
+            flex-grow: 1;
+        }
+        .input-group {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 14px;
+    color: #555;
+    font-weight: 600;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 15px;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.input-group input:focus {
+    border-color: #999;
+}
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    {% if not order %}
+        <h2>Track Your Order</h2>
+        <p>Enter your order details to track your order</p>
+
+        {% if error_message %}
+            <p class="error">{{ error_message }}</p>
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+            <div class="input-group">
+                <label for="order_number">Order ID</label>
+                <input type="text" id="order_number" name="order_number" placeholder="Enter Order ID" required>
+            </div>
+            <div class="input-group">
+                <label for="mobile">Mobile</label>
+                <input type="text" id="mobile" name="mobile" placeholder="Enter Mobile" required>
+            </div>
+            <button type="submit">Track Your Order</button>
+        </form>
+
+    {% else %}
+        <h2>Order Details</h2>
+        <div class="order-details">
+            <p><strong>Order Number:</strong> {{ order.order_number }}</p>
+            <p><strong>Placed on:</strong> {{ order.created_at|date:"d M Y, h:i A" }}</p>
+            <p><strong>Username:</strong> {{ order.profile.user.username }}</p>
+            <p><strong>Order Status:</strong> {{ order.order_status }}</p>
+            <p><strong>Payment Method:</strong> {{ order.payment_method }}</p>
+        </div>
+
+        <div class="section">
+            <h3>Shipping Details</h3>
+            <p><strong>Name:</strong> {{ order.profile.user.get_full_name }}</p>
+            <p><strong>Phone:</strong> {{ order.profile.phone }}</p>
+            <p><strong>Address:</strong> {{ order.profile.address1 }}</p>
+            <p><strong>City:</strong> {{ order.profile.city }}</p>
+            <p><strong>State:</strong> {{ order.profile.state }}</p>
+            <p><strong>Postal Code:</strong> {{ order.profile.zipcode }}</p>
+        </div>
+
+        <div class="section">
+            <h3>Order Summary</h3>
+            {% if order.cart.items.all %}
+                {% for item in order.cart.items.all %}
+                    <div class="product-item">
+                        <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
+                        <div class="product-info">
+                            <div><strong>{{ item.product.name }}</strong></div>
+                            <div>Quantity: {{ item.quantity }}</div>
+                            <div>Price: ₹{{ item.product.price }}</div>
+                        </div>
+                    </div>
+                {% endfor %}
+                <p style="text-align: right; margin-top: 20px;"><strong>Total Price:</strong> ₹{{ order.total_price }}</p>
+            {% else %}
+                <p>No products found in this order.</p>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+
+</body>
+</html>

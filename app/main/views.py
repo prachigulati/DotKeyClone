@@ -92,9 +92,31 @@ def logout_view(request):
     return redirect('home')
 
 
+
+
+
 @login_required
 def my_orders(request):
     orders = Order.objects.filter(profile=request.user.profile).order_by('-created_at')  # Newest first
     for order in orders:
         order.created_at_ist = localtime(order.created_at)
     return render(request, 'my_orders.html', {'orders': orders})
+
+
+def track_order(request):
+    order = None
+    error_message = None
+
+    if request.method == 'POST':
+        order_number = request.POST.get('order_number')
+        mobile = request.POST.get('mobile')
+
+        try:
+            order = Order.objects.get(order_number=order_number)
+            if str(order.profile.phone) != str(mobile):  # <- Corrected here
+                error_message = "Mobile number does not match with the order."
+                order = None  # Hide details if mobile doesn't match
+        except Order.DoesNotExist:
+            error_message = "No order found with that number."
+
+    return render(request, 'track_order.html', {'order': order, 'error_message': error_message})

@@ -19,7 +19,7 @@
 <!-- Icons -->
 <div style="display:flex; gap:30px; font-size:28px;">
     {% if user.is_authenticated %}
-    <a href="{% url 'my_orders' %}" style="font-size: 28px; color: black;"><i class="bi bi-truck"></i></a>
+    <a href="{% url 'track_order' %}" style="font-size: 28px; color: black;"><i class="bi bi-truck"></i></a>
     <a href="#" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" onclick="loadCart()">
         <i class="bi bi-handbag"></i>
     </a>
