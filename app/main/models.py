@@ -2,6 +2,7 @@ from django.db import models
 import datetime
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
+from django.utils import timezone
 # Create your models here.
 
 
@@ -19,7 +20,8 @@ class Profile(models.Model):
     old_cart = models.TextField(blank=True, null=True, default='{}')
     def __str__(self):
         return self.user.username
-    
+
+
 #create a user profile by default when user signs up
 def create_profile(sender, instance, created, **kwargs):
     if created:
@@ -68,3 +70,20 @@ class CartItem(models.Model):
 
     def __str__(self):
         return f"{self.product.name} x {self.quantity}"
+
+
+class Order(models.Model):
+    STATUS_CHOICES = (
+        ('Placed', 'Placed'),
+        ('Shipped', 'Shipped'),
+        ('Delivered', 'Delivered'),
+    )
+    profile = models.ForeignKey('Profile', on_delete=models.CASCADE)
+    cart = models.ForeignKey('Cart', on_delete=models.SET_NULL, null=True, blank=True)
+    total_price = models.DecimalField(max_digits=10, decimal_places=2)
+    payment_method = models.CharField(max_length=20)  # COD / Online
+    order_status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Placed')
+    created_at = models.DateTimeField(auto_now_add=True)  # Automatically set at order creation
+    updated_at = models.DateTimeField(auto_now=True)      # Automatically updates on changes
+    def __str__(self):
+        return f"Order #{self.id} - {self.profile.user.username} ({self.order_status})"

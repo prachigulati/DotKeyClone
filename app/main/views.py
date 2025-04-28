@@ -2,8 +2,10 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
-from .models import Category, Product, Cart
+from .models import Category, Product, Cart, Order
 from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from django.utils.timezone import localtime
 
 # Home page
 def home(request):
@@ -16,7 +18,6 @@ def search_products(request):
     query = request.GET.get('query', '')
     products = Product.objects.filter(name__icontains=query) | Product.objects.filter(tag__icontains=query)
     product_list = []
-
     for product in products:
         product_list.append({
             'id': product.id,
@@ -89,3 +90,11 @@ def register_user(request):
 def logout_view(request):
     logout(request)
     return redirect('home')
+
+
+@login_required
+def my_orders(request):
+    orders = Order.objects.filter(profile=request.user.profile).order_by('-created_at')  # Newest first
+    for order in orders:
+        order.created_at_ist = localtime(order.created_at)
+    return render(request, 'my_orders.html', {'orders': orders})

@@ -4,131 +4,131 @@
 
 <!-- Navbar -->
 <nav>
-  <div style="padding:40px 150px; background:white; display:flex; justify-content:space-between; align-items:center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border-bottom:1px solid #726c6c; border-radius:8px; position: relative;">
-    <a href="{% url 'home' %}">
-      <img src="https://www.dotandkey.com/cdn/shop/files/Vector_5.svg?v=1720438003&width=450">
+<div style="padding:40px 150px; background:white; display:flex; justify-content:space-between; align-items:center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border-bottom:1px solid #726c6c; border-radius:8px; position: relative;">
+<a href="{% url 'home' %}">
+    <img src="https://www.dotandkey.com/cdn/shop/files/Vector_5.svg?v=1720438003&width=450">
+</a>
+
+<!-- Search Bar -->
+<div style="display:flex; align-items:center; border:1px solid #000; border-radius:8px; padding:12px; width:300px; font-family:sans-serif; margin-left: 300px; position:relative;">
+    <i class="bi bi-search" style="margin-right:8px;"></i>
+    <input type="text" id="searchInput" placeholder="Search" style="border:none; outline:none; font-size:16px; width:100%; font-weight:500; color:#333;" oninput="liveSearch()" autocomplete="off" />
+    <div id="suggestionBox" style="position:absolute; top:50px; left:0; width:500px; background:white; border:1px solid #ccc; border-radius:10px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); display:none; max-height:500px; overflow-y:auto; z-index:1000;"></div>
+</div>
+
+<!-- Icons -->
+<div style="display:flex; gap:30px; font-size:28px;">
+    {% if user.is_authenticated %}
+    <a href="{% url 'my_orders' %}" style="font-size: 28px; color: black;"><i class="bi bi-truck"></i></a>
+    <a href="#" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" onclick="loadCart()">
+        <i class="bi bi-handbag"></i>
     </a>
+    {% else %}
+    <a href="#" style="font-size: 28px; color: black;"><i class="bi bi-truck"></i></a>
+    <a href="#"><i class="bi bi-handbag"></i></a>
+    {% endif %}
 
-    <!-- Search Bar -->
-    <div style="display:flex; align-items:center; border:1px solid #000; border-radius:8px; padding:12px; width:300px; font-family:sans-serif; margin-left: 300px; position:relative;">
-      <i class="bi bi-search" style="margin-right:8px;"></i>
-      <input type="text" id="searchInput" placeholder="Search" style="border:none; outline:none; font-size:16px; width:100%; font-weight:500; color:#333;" oninput="liveSearch()" autocomplete="off" />
-      <div id="suggestionBox" style="position:absolute; top:50px; left:0; width:500px; background:white; border:1px solid #ccc; border-radius:10px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); display:none; max-height:500px; overflow-y:auto; z-index:1000;"></div>
-    </div>
-
-    <!-- Icons -->
-    <div style="display:flex; gap:30px; font-size:28px;">
-      <a href="#" style="font-size: 28px; color: black;"><i class="bi bi-truck"></i></a>
-
-      {% if user.is_authenticated %}
-        <a href="#" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" onclick="loadCart()">
-          <i class="bi bi-handbag"></i>
+    <div class="dropdown">
+    {% if user.is_authenticated %}
+        <a href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" title="">
+        <i class="bi bi-person" style="font-size: 28px; color: black;"></i>
         </a>
-      {% else %}
-        <a href="#"><i class="bi bi-handbag"></i></a>
-      {% endif %}
-
-      <div class="dropdown">
-        {% if user.is_authenticated %}
-          <a href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" title="">
-            <i class="bi bi-person" style="font-size: 28px; color: black;"></i>
-          </a>
-          <ul class="dropdown-menu dropdown-menu-end">
-            <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
-          </ul>
-        {% else %}
-          <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#loginModal" title="Login">
-            <i class="bi bi-person" style="font-size: 28px; color: black;"></i>
-          </a>
-        {% endif %}
-      </div>
+        <ul class="dropdown-menu dropdown-menu-end">
+        <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+        </ul>
+    {% else %}
+        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#loginModal" title="Login">
+        <i class="bi bi-person" style="font-size: 28px; color: black;"></i>
+        </a>
+    {% endif %}
     </div>
-  </div>
+</div>
+</div>
 </nav>
 
 <!-- Navigation Links -->
 <div style="padding:10px; display:flex; gap:50px; flex-wrap:wrap; justify-content:flex-start; background:white; font-size:22px; font-weight:500; border-bottom:1px solid #eee; padding-left: 120px;">
-  <a href="#" style="text-decoration:none; color:#333;">SHOP ALL <i class="bi bi-chevron-down"></i></a>
-  <a href="#" style="text-decoration:none; color:#333;">SKIN CONCERN <i class="bi bi-chevron-down"></i></a>
-  <a href="#" style="text-decoration:none; color:#333;">INGREDIENTS <i class="bi bi-chevron-down"></i></a>
-  <a href="#" style="text-decoration:none; color:#333;">SKIN TYPE <i class="bi bi-chevron-down"></i></a>
-  <a href="{% url 'bestsellers' %}" style="text-decoration:none; color:#333;">BEST SELLERS</a>
-  <a href="{% url 'newarrivals' %}" style="text-decoration:none; color:#333;">NEW ARRIVALS</a>
-  <a href="#" style="text-decoration:none; color:#333;">BLOGS</a>
+<a href="#" style="text-decoration:none; color:#333;">SHOP ALL <i class="bi bi-chevron-down"></i></a>
+<a href="#" style="text-decoration:none; color:#333;">SKIN CONCERN <i class="bi bi-chevron-down"></i></a>
+<a href="#" style="text-decoration:none; color:#333;">INGREDIENTS <i class="bi bi-chevron-down"></i></a>
+<a href="#" style="text-decoration:none; color:#333;">SKIN TYPE <i class="bi bi-chevron-down"></i></a>
+<a href="{% url 'bestsellers' %}" style="text-decoration:none; color:#333;">BEST SELLERS</a>
+<a href="{% url 'newarrivals' %}" style="text-decoration:none; color:#333;">NEW ARRIVALS</a>
+<a href="#" style="text-decoration:none; color:#333;">BLOGS</a>
 </div>
 
 
 
 <!-- Login Modal -->
 <div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true" style="padding-top: 120px;">
-    <div class="modal-dialog">
-        <div class="modal-content p-3">
-            <form method="post" action="/login/">
-                {% csrf_token %}
-                <h4 class="text-center" style="font-size: x-large; font-weight: 600; margin-bottom: 3px;">Login</h4>
-                <hr>
-                {% if messages %}
-                    <div class="alert alert-danger">
-                        {% for message in messages %}
-                            {{ message }}
-                        {% endfor %}
-                    </div>
-                {% endif %}
-                <div class="mb-3">
-                    <label class="form-label">Username</label>
-                    <input type="text" name="username" class="form-control" placeholder="Enter username" required>
+<div class="modal-dialog">
+    <div class="modal-content p-3">
+        <form method="post" action="/login/">
+            {% csrf_token %}
+            <h4 class="text-center" style="font-size: x-large; font-weight: 600; margin-bottom: 3px;">Login</h4>
+            <hr>
+            {% if messages %}
+                <div class="alert alert-danger">
+                    {% for message in messages %}
+                        {{ message }}
+                    {% endfor %}
                 </div>
-                <div class="mb-3 position-relative">
-                    <label class="form-label">Password</label>
-                    <input type="password" name="password" id="LoginPasswordInput" class="form-control" placeholder="Enter password" required>
-                    <i class="toggle-password bi bi-eye-slash" style="position: absolute; top: 55%; right: 15px; cursor: pointer;" onclick="togglePassword('LoginPasswordInput', 'LoginToggleIcon')"></i>
-                </div>
-                <button type="submit" class="btn btn-primary w-100" style="background-color: deeppink;">Login</button>
-            </form>
-            <a a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#registerModal"><div style="padding-left: 160px;">new user?Register</div></a>
-        </div>
+            {% endif %}
+            <div class="mb-3">
+                <label class="form-label">Username</label>
+                <input type="text" name="username" class="form-control" placeholder="Enter username" required>
+            </div>
+            <div class="mb-3 position-relative">
+                <label class="form-label">Password</label>
+                <input type="password" name="password" id="LoginPasswordInput" class="form-control" placeholder="Enter password" required>
+                <i class="toggle-password bi bi-eye-slash" style="position: absolute; top: 55%; right: 15px; cursor: pointer;" onclick="togglePassword('LoginPasswordInput', 'LoginToggleIcon')"></i>
+            </div>
+            <button type="submit" class="btn btn-primary w-100" style="background-color: deeppink;">Login</button>
+        </form>
+        <a a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#registerModal"><div style="padding-left: 160px;">new user?Register</div></a>
     </div>
+</div>
 </div>
 
 <!-- Register Modal -->
 <div class="modal fade" id="registerModal" tabindex="-1" aria-hidden="true" style="padding-top: 25px;">
-    <div class="modal-dialog">
-        <div class="modal-content p-3">
-            <form method="post" action="/register/">
-                {% csrf_token %}
-                <h4 class="text-center" style="font-size: x-large; font-weight: 600; margin-bottom: 3px;">Register</h4>
-                <hr>
-                {% if messages %}
-                    <div class="alert alert-danger">
-                        {% for message in messages %}
-                            {{ message }}
-                        {% endfor %}
-                    </div>
-                {% endif %}
-                <div class="mb-2">
-                    <label class="form-label">First Name</label>
-                    <input type="text" name="first_name" class="form-control" placeholder="Enter your First name" required>
+<div class="modal-dialog">
+    <div class="modal-content p-3">
+        <form method="post" action="/register/">
+            {% csrf_token %}
+            <h4 class="text-center" style="font-size: x-large; font-weight: 600; margin-bottom: 3px;">Register</h4>
+            <hr>
+            {% if messages %}
+                <div class="alert alert-danger">
+                    {% for message in messages %}
+                        {{ message }}
+                    {% endfor %}
                 </div>
-                <div class="mb-2">
-                    <label class="form-label">Last Name</label>
-                    <input type="text" name="last_name" class="form-control" placeholder="Enter your Last name" required>
-                </div>
-                <div class="mb-2">
-                    <label class="form-label">Username</label>
-                    <input type="text" name="username" class="form-control" placeholder="Enter username" required>
-                </div>
-                <div class="mb-3 position-relative">
-                    <label class="form-label">Password</label>
-                    <input type="password" name="password" id="RegisterPasswordInput" class="form-control" placeholder="Enter password" required>
-                    <i class="toggle-password bi bi-eye-slash" style="position: absolute; top: 55%; right: 15px; cursor: pointer;"  onclick="togglePassword('RegisterPasswordInput', 'RegisterToggleIcon')"></i>
-                </div>
-                
-                <!-- Add Bootstrap Icons -->
-                <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">                
-                <button type="submit" class="btn btn-success w-100" style="background-color: deeppink;" >Register</button>
-            </form>
-        </div>
+            {% endif %}
+            <div class="mb-2">
+                <label class="form-label">First Name</label>
+                <input type="text" name="first_name" class="form-control" placeholder="Enter your First name" required>
+            </div>
+            <div class="mb-2">
+                <label class="form-label">Last Name</label>
+                <input type="text" name="last_name" class="form-control" placeholder="Enter your Last name" required>
+            </div>
+            <div class="mb-2">
+                <label class="form-label">Username</label>
+                <input type="text" name="username" class="form-control" placeholder="Enter username" required>
+            </div>
+            <div class="mb-3 position-relative">
+                <label class="form-label">Password</label>
+                <input type="password" name="password" id="RegisterPasswordInput" class="form-control" placeholder="Enter password" required>
+                <i class="toggle-password bi bi-eye-slash" style="position: absolute; top: 55%; right: 15px; cursor: pointer;"  onclick="togglePassword('RegisterPasswordInput', 'RegisterToggleIcon')"></i>
+            </div>
+            
+            <!-- Add Bootstrap Icons -->
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">                
+            <button type="submit" class="btn btn-success w-100" style="background-color: deeppink;" >Register</button>
+        </form>
     </div>
+</div>
 </div>
 
 
@@ -138,123 +138,123 @@
 <!-- Search Script -->
 <script>
 function liveSearch() {
-    const query = document.getElementById('searchInput').value;
-    const suggestionBox = document.getElementById('suggestionBox');
+const query = document.getElementById('searchInput').value;
+const suggestionBox = document.getElementById('suggestionBox');
 
-    if (query.length === 0) {
-        suggestionBox.style.display = "none";
-        suggestionBox.innerHTML = "";
-        return;
-    }
+if (query.length === 0) {
+    suggestionBox.style.display = "none";
+    suggestionBox.innerHTML = "";
+    return;
+}
 
-    fetch(`/search/?query=${encodeURIComponent(query)}`)
-        .then(response => response.json())
-        .then(data => {
-            const products = data.products;
+fetch(`/search/?query=${encodeURIComponent(query)}`)
+    .then(response => response.json())
+    .then(data => {
+        const products = data.products;
 
-            if (products.length === 0) {
-                suggestionBox.innerHTML = `<div style="padding: 15px; text-align: center; color: #777;">No products found</div>`;
-                suggestionBox.style.display = "block";
-                return;
-            }
-
-            suggestionBox.innerHTML = `
-                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 16px; padding: 16px;">
-                    ${products.map(product => `
-                        <div style="cursor: pointer; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                            <img src="${product.image}" alt="${product.name}" style="width: 100%; height: 150px; object-fit: cover;">
-                            <div style="padding: 10px;">
-                                <div style="font-weight: 600; font-size: 14px; color: #333; margin-bottom: 4px;">${product.name}</div>
-                                <div style="color: #888; font-size: 13px; margin-bottom: 4px;">${product.tag}</div>
-                                <div style="font-weight: bold; color: #000;">₹${product.price}</div>
-                                <button class="btn btn-dark w-100 mt-2 add-to-cart-btn" 
-                                    data-product-id="${product.id}" 
-                                    style="font-size: 14px; padding: 8px; border-radius: 6px;">
-                                    ADD TO CART
-                                </button>
-                            </div>
-                        </div>
-                    `).join('')}
-                </div>
-            `;
-
+        if (products.length === 0) {
+            suggestionBox.innerHTML = `<div style="padding: 15px; text-align: center; color: #777;">No products found</div>`;
             suggestionBox.style.display = "block";
-            attachAddToCartListeners();
-        })
-        .catch(error => {
-            console.error('Error fetching search results:', error);
-            suggestionBox.style.display = "none";
-        });
+            return;
+        }
+
+        suggestionBox.innerHTML = `
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 16px; padding: 16px;">
+                ${products.map(product => `
+                    <div style="cursor: pointer; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                        <img src="${product.image}" alt="${product.name}" style="width: 100%; height: 150px; object-fit: cover;">
+                        <div style="padding: 10px;">
+                            <div style="font-weight: 600; font-size: 14px; color: #333; margin-bottom: 4px;">${product.name}</div>
+                            <div style="color: #888; font-size: 13px; margin-bottom: 4px;">${product.tag}</div>
+                            <div style="font-weight: bold; color: #000;">₹${product.price}</div>
+                            <button class="btn btn-dark w-100 mt-2 add-to-cart-btn" 
+                                data-product-id="${product.id}" 
+                                style="font-size: 14px; padding: 8px; border-radius: 6px;">
+                                ADD TO CART
+                            </button>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+
+        suggestionBox.style.display = "block";
+        attachAddToCartListeners();
+    })
+    .catch(error => {
+        console.error('Error fetching search results:', error);
+        suggestionBox.style.display = "none";
+    });
 }
 
 function attachAddToCartListeners() {
-    const buttons = document.querySelectorAll('.add-to-cart-btn');
-    const csrfToken = document.getElementById('csrfToken').value;
+const buttons = document.querySelectorAll('.add-to-cart-btn');
+const csrfToken = document.getElementById('csrfToken').value;
 
-    buttons.forEach(function(button) {
-        button.addEventListener('click', function(e) {
-            e.stopPropagation();  // prevent card click redirect
-            const productId = this.dataset.productId;
+buttons.forEach(function(button) {
+    button.addEventListener('click', function(e) {
+        e.stopPropagation();  // prevent card click redirect
+        const productId = this.dataset.productId;
 
-            fetch("{% url 'cart:cart_add' %}", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'X-CSRFToken': csrfToken,
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-                body: new URLSearchParams({
-                    'product_id': productId,
-                    'product_qty': 1
-                })
+        fetch("{% url 'cart:cart_add' %}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': csrfToken,
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: new URLSearchParams({
+                'product_id': productId,
+                'product_qty': 1
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    alert('Added to cart!');
-                    loadCart();
-                    window.location.reload();
-                    const cartCanvas = new bootstrap.Offcanvas('#offcanvasCart');
-                    cartCanvas.show();
-                } else {
-                    alert(data.error || 'Something went wrong');
-                }
-            });
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                alert('Added to cart!');
+                loadCart();
+                window.location.reload();
+                const cartCanvas = new bootstrap.Offcanvas('#offcanvasCart');
+                cartCanvas.show();
+            } else {
+                alert(data.error || 'Something went wrong');
+            }
         });
     });
+});
 }
 
 // Hide suggestion box when clicking outside
 document.addEventListener('click', function(event) {
-    const container = document.getElementById('searchInput').parentElement;
-    if (!container.contains(event.target)) {
-        document.getElementById('suggestionBox').style.display = 'none';
-    }
+const container = document.getElementById('searchInput').parentElement;
+if (!container.contains(event.target)) {
+    document.getElementById('suggestionBox').style.display = 'none';
+}
 });
 
 function loadCart() {
-    fetch("{% url 'cart:cart_offcanvas' %}")
-        .then(res => res.text())
-        .then(data => {
-            document.querySelector("#offcanvasCart .offcanvas-body").innerHTML = data;
-        });
+fetch("{% url 'cart:cart_offcanvas' %}")
+    .then(res => res.text())
+    .then(data => {
+        document.querySelector("#offcanvasCart .offcanvas-body").innerHTML = data;
+    });
 }
 
 
 function togglePassword(passwordInputId, toggleIconId) {
-        const passwordInput = document.getElementById(passwordInputId);
-        const toggleIcon = document.getElementById(toggleIconId);
-    
-        if (passwordInput.type === "password") {
-            passwordInput.type = "text";
-            toggleIcon.classList.remove('bi-eye-slash');
-            toggleIcon.classList.add('bi-eye');
-        } else {
-            passwordInput.type = "password";
-            toggleIcon.classList.remove('bi-eye');
-            toggleIcon.classList.add('bi-eye-slash');
-        }
+    const passwordInput = document.getElementById(passwordInputId);
+    const toggleIcon = document.getElementById(toggleIconId);
+
+    if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+        toggleIcon.classList.remove('bi-eye-slash');
+        toggleIcon.classList.add('bi-eye');
+    } else {
+        passwordInput.type = "password";
+        toggleIcon.classList.remove('bi-eye');
+        toggleIcon.classList.add('bi-eye-slash');
     }
+}
 </script>
 
 <!-- Bootstrap JS -->
@@ -263,12 +263,12 @@ function togglePassword(passwordInputId, toggleIconId) {
 
 <!-- Auto-open Modal if Context Flag Set -->
 <script>
-    {% if show_login %}
-        const loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
-        loginModal.show();
-    {% endif %}
-    {% if show_register %}
-        const registerModal = new bootstrap.Modal(document.getElementById('registerModal'));
-        registerModal.show();
-    {% endif %}
+{% if show_login %}
+    const loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
+    loginModal.show();
+{% endif %}
+{% if show_register %}
+    const registerModal = new bootstrap.Modal(document.getElementById('registerModal'));
+    registerModal.show();
+{% endif %}
 </script>

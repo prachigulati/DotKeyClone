@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -64,6 +65,13 @@
                     <span class="font-semibold">Address</span>
                     <span>→</span>
                     <span class="text-gray-400">Payment</span>
+                {% elif step == 3 %}
+                    <span class="text-gray-400">Contact</span>
+                    <span>→</span>
+                    <span class="text-gray-400">Address</span>
+                    <span>→</span>
+                    <div class="w-8 h-8 rounded-full bg-black text-white flex items-center justify-center">3</div>
+                    <span class="font-semibold">Payment</span>
                 {% endif %}
             </div>
 
@@ -82,14 +90,11 @@
                         <input id="updates" name="updates" class="mr-2">
                         <label for="updates"class="text-sm" style="margin-left: -185px;">Send me order updates and offers</label>
                     </div>
-
                     <button type="submit" name="action" value="save_mobile" class="bg-black text-white w-full py-2 rounded flex items-center justify-center">
                         Confirm
                     </button>
                 </form>
             </div>
-
-            <!-- Address Step -->
             <!-- Address Step -->
         {% elif step == 2 %}
         <div>
@@ -104,7 +109,6 @@
                     <input type="text" name="zipcode" placeholder="Zip Code" class="border p-2 rounded" value="{{ profile.zipcode }}">
                     <input type="text" name="country" placeholder="Country" class="border p-2 rounded" value="{{ profile.country }}">
                 </div>
-
                 <div class="flex space-x-4">
                     <button type="submit" name="action" value="go_back" class="border border-black text-black px-4 py-2 rounded">
                         ← Go Back
@@ -115,10 +119,92 @@
                 </div>
             </form>
         </div>
-        {% endif %}
+
+        {% elif step == 3 %}
+        <div>
+            <h2 class="text-2xl font-bold mb-4">Payment</h2>
+            <form method="POST" id="payment-form">
+                {% csrf_token %}
+                
+                <div class="flex flex-col gap-4 mb-6">
+                    <div class="flex items-center border rounded p-2">
+                        <input type="radio" id="cod" name="payment_method" value="COD" class="mr-2" checked>
+                        <label for="cod" class="w-full">Cash on Delivery</label>
+                    </div>
+                    <div class="flex items-center border rounded p-2">
+                        <input type="radio" id="online" name="payment_method" value="Online" class="mr-2">
+                        <label for="online" class="w-full">Pay Online (UPI / Card / Netbanking)</label>
+                    </div>
+                </div>
+
+                <div class="flex space-x-4">
+                    <button type="button" onclick="goBack()" class="border border-black text-black px-4 py-2 rounded">
+                        ← Go Back
+                    </button>
+                    <button type="submit" class="bg-black text-white px-4 py-2 rounded">
+                        Place Order
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+        <script>
+        function goBack() {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = "";
+            form.innerHTML = `{% csrf_token %}<input type="hidden" name="action" value="go_back_address">`;
+            document.body.appendChild(form);
+            form.submit();
+        }
+
+        document.getElementById('payment-form').addEventListener('submit', function(e) {
+            e.preventDefault();  // Prevent normal form submit
+
+            var selectedMethod = document.querySelector('input[name="payment_method"]:checked').value;
+
+            if (selectedMethod === 'COD') {
+                // Direct submit the form for COD
+                const codForm = document.createElement('form');
+                codForm.method = 'POST';
+                codForm.action = "";
+                codForm.innerHTML = `{% csrf_token %}<input type="hidden" name="action" value="cod">`;
+                document.body.appendChild(codForm);
+                codForm.submit();
+            } 
+            else if (selectedMethod === 'Online') {
+                // Open Razorpay
+                var options = {
+                    "key": "{{ razorpay_key_id }}", 
+                    "amount": "{{ razorpay_order.amount }}",
+                    "currency": "INR",
+                    "name": "Dot & Key",
+                    "description": "Order Payment",
+                    "image": "{% static 'assets/favicon.jpg' %}",
+                    "order_id": "{{ razorpay_order.id }}",
+                    "handler": function (response){
+                        // Payment Success -> Redirect to payment verification
+                        window.location.href = "/payment_success/?payment_id=" + response.razorpay_payment_id;
+                    },
+                    "prefill": {
+                        "name": "{{ request.user.get_full_name }}",
+                        "email": "{{ request.user.email }}",
+                        "contact": "{{ profile.phone }}"
+                    },
+                    "theme": {
+                        "color": "#000000"
+                    }
+                };
+                var rzp1 = new Razorpay(options);
+                rzp1.open();
+            }
+        });
+        </script>
+    {% endif %}
+
         </div>
     </div>
-<script>
-</script>
 </body>
 </html>
