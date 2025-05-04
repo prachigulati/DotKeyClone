@@ -35,12 +35,23 @@
           <div style="font-size: 18px; font-weight: bold;">₹{{ product.price }}</div>
         </div>
 
+        
+        {% if user.is_authenticated %}
+        <!-- Add to Cart Button -->
         <div class="card-bottom" style="padding: 0 16px 16px 16px;">
-          <button class="btn-cart-action add-to-cart-btn"
-        data-product-id="{{ product.id }}"
-        data-product-qty="1"
-        style="width: 100%; margin-top: 10px; background: black; color: white; padding: 20px; border: none; border-radius: 8px; font-weight: bold;font-size: 18px;">ADD TO CART</button>
+          <button class="btn-cart-action add-to-cart-btn" data-product-id="{{ product.id }}" data-product-qty="1"
+            style="width: 100%; margin-top: 10px; background: black; color: white; padding: 14px; border: none; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer;">
+            ADD TO CART
+          </button>
         </div>
+        {% else %}
+        <div class="card-bottom" style="padding: 0 16px 16px 16px;">
+          <button class="btn-cart-action add-to-cart-btn" data-bs-toggle="modal" data-bs-target="#loginModal"
+            style="width: 100%; margin-top: 10px; background: black; color: white; padding: 14px; border: none; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer;">
+            ADD TO CART
+          </button>
+        </div>
+        {% endif %}
       </div>
     {% endfor %}
   </div>

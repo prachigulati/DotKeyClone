@@ -2,13 +2,8 @@
 {% load static %}
 {% block content %}
 
-<div style="background: linear-gradient(to right, #f9d, #ccf); text-align:center; font-size:18px;">
-    <img src="https://www.dotandkey.com/cdn/shop/files/timer-web_0da49c9c-543a-4bba-93fe-161b0091848b.png?v=1742819360&width=2000" style="max-width: 500px;">
-</div>
-<img src="{% static 'assets/bestsellers.jpg' %}" style="width: 100%;">
-
 <section style="background-color: white;">
-  <center><div style="font-weight: bold;font-size: 40px;margin-top: 50px;">Bestsellers</div></center>
+    <center><div style="font-weight: bold;font-size: 40px;margin-top: 50px;margin-bottom: 20px;">All Products</div></center>
   <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
 
   <div class="product-grid">
@@ -36,6 +31,7 @@
           <div style="font-size: 18px; font-weight: bold;">₹{{ product.price }}</div>
         </div>
 
+        
         {% if user.is_authenticated %}
         <!-- Add to Cart Button -->
         <div class="card-bottom" style="padding: 0 16px 16px 16px;">

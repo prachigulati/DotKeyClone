@@ -12,7 +12,6 @@ def home(request):
     return render(request, 'home.html', {})
 
 
-
 #search bar
 def search_products(request):
     query = request.GET.get('query', '')
@@ -28,6 +27,7 @@ def search_products(request):
         })
     
     return JsonResponse({'products': product_list})
+
 
 # Best Sellers
 def bestsellers(request):
@@ -120,3 +120,56 @@ def track_order(request):
             error_message = "No order found with that number."
 
     return render(request, 'track_order.html', {'order': order, 'error_message': error_message})
+
+
+import re
+
+def slugify(text):
+    return re.sub(r'[^a-z0-9]+', '-', text.lower()).strip('-')
+
+
+def product_search(request):
+    keywords = request.GET.getlist('q')
+    products = Product.objects.all()
+    if keywords:
+        from django.db.models import Q
+        query = Q()
+        for word in keywords:
+            query |= Q(name__icontains=word)
+        products = products.filter(query)
+        # Just use the first keyword for banner image
+        banner_slug = slugify(keywords[0])
+    else:
+        banner_slug = 'default'
+    return render(request, 'search.html', {
+        'products': products,
+        'filter': keywords,
+        'banner_image': f'assets/{banner_slug}.jpg'
+    })
+
+
+
+def product_type_search(request):
+    keywords = request.GET.getlist('q')
+    products = Product.objects.all()
+    if keywords:
+        from django.db.models import Q
+        query = Q()
+        for word in keywords:
+            query |= Q(description__icontains=word)
+        products = products.filter(query)
+        # Just use the first keyword for banner image
+        banner_slug = slugify(keywords[0])
+    else:
+        banner_slug = 'default'
+    return render(request, 'search.html', {
+        'products': products,
+        'filter': keywords,
+        'banner_image': f'assets/{banner_slug}.jpg'
+    })
+
+
+
+def shopall(request):
+    products = Product.objects.all()
+    return render(request, 'shopall.html', {'products': products})

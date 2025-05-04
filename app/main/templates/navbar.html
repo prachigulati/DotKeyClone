@@ -20,12 +20,35 @@
 <div style="display:flex; gap:30px; font-size:28px;">
     {% if user.is_authenticated %}
     <a href="{% url 'track_order' %}" style="font-size: 28px; color: black;"><i class="bi bi-truck"></i></a>
-    <a href="#" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" onclick="loadCart()">
-        <i class="bi bi-handbag"></i>
+    
+    <a href="#" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" onclick="loadCart()" class="position-relative">
+        <i class="bi bi-handbag" style="font-size: 1.5rem;"></i>
+        <span id="cart-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.7rem;">
+            0
+        </span>
     </a>
+    <script>
+        function updateCartCount() {
+          fetch("{% url 'cart:cart_quantity_api' %}")
+            .then(response => response.json())
+            .then(data => {
+              const badge = document.getElementById("cart-count");
+              if (badge) {
+                badge.textContent = data.quantity;
+                badge.style.display = data.quantity > 0 ? 'inline-block' : 'none';
+              }
+            });
+        }
+      
+        document.addEventListener("DOMContentLoaded", function () {
+          updateCartCount();
+          setInterval(updateCartCount, 30000); // Optional: refresh every 30s
+        });
+      </script>
+          
     {% else %}
-    <a href="#" style="font-size: 28px; color: black;"><i class="bi bi-truck"></i></a>
-    <a href="#"><i class="bi bi-handbag"></i></a>
+    <a href="#" style="font-size: 28px; color: black;" data-bs-toggle="modal" data-bs-target="#loginModal"><i class="bi bi-truck"></i></a>
+    <a href="#" style="font-size: 28px; color: black;" data-bs-toggle="modal" data-bs-target="#loginModal"><i class="bi bi-handbag"></i></a>
     {% endif %}
 
     <div class="dropdown">
@@ -47,12 +70,40 @@
 </div>
 </nav>
 
+
+
 <!-- Navigation Links -->
 <div style="padding:10px; display:flex; gap:50px; flex-wrap:wrap; justify-content:flex-start; background:white; font-size:22px; font-weight:500; border-bottom:1px solid #eee; padding-left: 120px;">
-<a href="#" style="text-decoration:none; color:#333;">SHOP ALL <i class="bi bi-chevron-down"></i></a>
-<a href="#" style="text-decoration:none; color:#333;">SKIN CONCERN <i class="bi bi-chevron-down"></i></a>
-<a href="#" style="text-decoration:none; color:#333;">INGREDIENTS <i class="bi bi-chevron-down"></i></a>
-<a href="#" style="text-decoration:none; color:#333;">SKIN TYPE <i class="bi bi-chevron-down"></i></a>
+    <a href="{%url 'shopall' %}" style="text-decoration:none; color:#333;">SHOP ALL</a>
+    
+
+<div style="position:relative;">
+    <a href="#" class="menu-link">INGREDIENTS<i class="bi bi-chevron-down"></i></a>
+    <div style="display:none; position:absolute; top:100%; left:0; background:white; box-shadow:0 4px 8px rgba(0,0,0,0.1); padding:10px; font-size:18px; z-index:100;" onmouseover="this.style.display='block'" onmouseout="this.style.display='none'">
+        <a href="{% url 'product_search' %}?q=vitamin%20c" style="display:block; color:#333; text-decoration:none; padding:5px 0;">Vitamin C</a>
+        <a href="{% url 'product_search' %}?q=hyaluronic&q=ceramides" style="display:block; color:#333; text-decoration:none; padding:5px 0;">Hyaluronic + Ceramides</a>
+        <a href="{% url 'product_search' %}?q=Niacinamide&q=cica" style="display:block; color:#333; text-decoration:none; padding:5px 0;">Niacinamide + CICA</a>
+        <a href="{% url 'product_search' %}?q=watermelon&q=aha" style="display:block; color:#333; text-decoration:none; padding:5px 0;">Watermelon + AHA</a>
+        <a href="{% url 'product_search' %}?q=strawberry" style="display:block; color:#333; text-decoration:none; padding:5px 0;">Strawberry</a>
+        <a href="{% url 'product_search' %}?q=salicylic%20acid" style="display:block; color:#333; text-decoration:none; padding:5px 0;">Salicylic Acid</a>
+        <a href="{% url 'product_search' %}?q=pomeggranate&q=retinol" style="display:block; color:#333; text-decoration:none; padding:5px 0;">Pomeggranate + Retinol</a>
+        <a href="{% url 'product_search' %}?q=mango" style="display:block; color:#333; text-decoration:none; padding:5px 0;">Mango</a>
+        <!-- <a href="#" style="text-decoration: none;"><div style="background-color: hotpink;margin-top: 7px;margin-left: 12px;margin-right: 20px;text-align: center;color: #000;" >View All</div></a> -->
+    </div>
+</div>
+
+<div style="position:relative;">
+    <a href="#" class="menu-link">SKIN TYPES <i class="bi bi-chevron-down"></i></a>
+    <div style="display:none; position:absolute; top:100%; left:0; background:white; box-shadow:0 4px 8px rgba(0,0,0,0.1); padding:10px; font-size:18px; z-index:100;" onmouseover="this.style.display='block'" onmouseout="this.style.display='none'">
+        <a href="{% url 'product_type_search' %}?q=oily" style="display:block; color:#333; text-decoration:none; padding:5px 0;">Oily</a>
+        <a href="{% url 'product_type_search' %}?q=dry" style="display:block; color:#333; text-decoration:none; padding:5px 0;">Dry</a>
+        <a href="{% url 'product_type_search' %}?q=combination" style="display:block; color:#333; text-decoration:none; padding:5px 0;">Combination</a>
+        <a href="{% url 'product_type_search' %}?q=sensitive" style="display:block; color:#333; text-decoration:none; padding:5px 0;">Sensitive</a>
+        <a href="{% url 'product_type_search' %}?q=all%20skin%20type" style="display:block; color:#333; text-decoration:none; padding:5px 0;">Normal</a>
+        <!-- <a href="#" style="text-decoration: none;"><div style="background-color: hotpink;margin-top: 7px;margin-left: 12px;margin-right: 20px;text-align: center;color: #000;" >View All</div></a> -->
+    </div>
+</div>
+
 <a href="{% url 'bestsellers' %}" style="text-decoration:none; color:#333;">BEST SELLERS</a>
 <a href="{% url 'newarrivals' %}" style="text-decoration:none; color:#333;">NEW ARRIVALS</a>
 <a href="#" style="text-decoration:none; color:#333;">BLOGS</a>
@@ -272,4 +323,27 @@ function togglePassword(passwordInputId, toggleIconId) {
     const registerModal = new bootstrap.Modal(document.getElementById('registerModal'));
     registerModal.show();
 {% endif %}
+</script>
+
+
+<style>
+    .menu-link {
+      text-decoration: none;
+      color: #333;
+      transition: color 0.3s;
+    }
+  
+    .menu-link:hover {
+      color: hotpink;
+    }
+</style>
+  
+<script>
+    // Basic hover for dropdowns (without needing external CSS)
+    const dropdowns = document.querySelectorAll("div[style*='position:relative']");
+    dropdowns.forEach(drop => {
+        const menu = drop.querySelector("div[style*='position:absolute']");
+        drop.addEventListener("mouseover", () => menu.style.display = "block");
+        drop.addEventListener("mouseout", () => menu.style.display = "none");
+    });
 </script>

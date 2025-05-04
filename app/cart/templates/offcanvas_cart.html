@@ -28,14 +28,6 @@
                     <input type="hidden" name="action" value="add">
                     <button class="btn btn-sm btn-light" type="submit">+</button>
                 </form>
-
-                <!-- Remove Item -->
-                <form method="POST" action="{% url 'cart:update_cart' %}" class="cart-action-form ms-2">
-                    {% csrf_token %}
-                    <input type="hidden" name="product_id" value="{{ product.id }}">
-                    <input type="hidden" name="action" value="remove">
-                    <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
-                </form>
             </div>
         </div>
     </div>

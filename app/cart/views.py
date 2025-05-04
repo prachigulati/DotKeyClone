@@ -93,11 +93,9 @@ def update_cart(request):
             product_id = request.POST.get('product_id')  # Get the product ID from the form
             action = request.POST.get('action')  # The action (subtract, add, remove)
             quantity = int(request.POST.get('quantity', 1))  # The quantity to add or subtract
-
             product = Product.objects.get(id=product_id)
             cart = Cart.objects.get(profile__user=request.user, active=True)
             cart_item = CartItem.objects.get(cart=cart, product=product)
-
             if action == 'add':
                 cart_item.quantity += quantity
             elif action == 'subtract':
@@ -106,7 +104,6 @@ def update_cart(request):
                     cart_item.delete()
             elif action == 'remove':
                 cart_item.delete()
-
             cart_item.save()
             return JsonResponse({'status': 'success'})
         except Product.DoesNotExist:
@@ -115,128 +112,8 @@ def update_cart(request):
             return JsonResponse({'status': 'error', 'error': 'Cart not found'})
         except Exception as e:
             return JsonResponse({'status': 'error', 'error': str(e)})
-
     return JsonResponse({'status': 'error', 'error': 'Invalid request'})
 
-
-
-# def checkout(request):
-#     profile = request.user.profile
-
-#     try:
-#         cart = Cart.objects.get(profile=profile, active=True)
-#         cart_items = cart.items.all()
-#     except Cart.DoesNotExist:
-#         cart = None
-#         cart_items = []
-
-#     total_price = sum(item.product.price * item.quantity for item in cart_items)
-#     amount_in_paisa = int(total_price * 100)
-
-#     step = request.session.get('checkout_step', 1)
-
-#     if request.method == 'POST':
-#         action = request.POST.get('action')
-
-#         if action == 'save_mobile':
-#             profile.phone = request.POST.get('mobile_number')
-#             profile.save()
-#             request.session['checkout_step'] = 2
-#             return redirect('cart:checkout')
-
-#         elif action == 'save_address':
-#             profile.address1 = request.POST.get('address1')
-#             profile.address2 = request.POST.get('address2')
-#             profile.city = request.POST.get('city')
-#             profile.state = request.POST.get('state')
-#             profile.zipcode = request.POST.get('zipcode')
-#             profile.country = request.POST.get('country')
-#             profile.save()
-#             request.session['checkout_step'] = 3
-#             return redirect('cart:checkout')
-
-#         elif action == 'cod':
-#             if cart:
-#                 # Create Order for Cash on Delivery
-#                 order = Order.objects.create(
-#                     profile=profile,
-#                     cart=cart,
-#                     total_price=total_price,
-#                     payment_method='COD',
-#                     payment_completed=False,
-#                 )
-#                 cart.active = False
-#                 cart.save()
-
-#                 # Create a fresh cart
-#                 Cart.objects.create(profile=profile, active=True)
-
-#                 request.session.pop('checkout_step', None)
-#                 return redirect('home')
-
-#         elif action == 'go_back':
-#             request.session['checkout_step'] = 1
-#             return redirect('cart:checkout')
-
-#         elif action == 'go_back_address':
-#             request.session['checkout_step'] = 2
-#             return redirect('cart:checkout')
-
-#     razorpay_order = None
-#     if step == 3 and cart_items:
-#         client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
-#         DATA = {
-#             "amount": amount_in_paisa,
-#             "currency": "INR",
-#             "payment_capture": 1,
-#         }
-#         razorpay_order = client.order.create(data=DATA)
-
-#     context = {
-#         'cart_items': cart_items,
-#         'total_price': total_price,
-#         'step': step,
-#         'profile': profile,
-#         'razorpay_key_id': settings.RAZORPAY_KEY_ID,
-#         'razorpay_order': razorpay_order,
-#     }
-#     return render(request, 'checkout.html', context)
-
-
-# @csrf_exempt
-# def payment_success(request):
-#     if request.method == "POST":
-#         data = request.POST
-#         payment_id = data.get('razorpay_payment_id')
-#         order_id = data.get('razorpay_order_id')
-#         signature = data.get('razorpay_signature')
-
-#         profile = request.user.profile
-#         try:
-#             cart = Cart.objects.get(profile=profile, active=True)
-#         except Cart.DoesNotExist:
-#             return redirect('home')
-
-#         # Create Order for Online Payment
-#         order = Order.objects.create(
-#             profile=profile,
-#             cart=cart,
-#             total_price=sum(item.product.price * item.quantity for item in cart.items.all()),
-#             payment_method='Online',
-#             payment_completed=True,
-#         )
-
-#         cart.active = False
-#         cart.save()
-
-#         # Create a fresh cart
-#         Cart.objects.create(profile=profile, active=True)
-
-#         request.session.pop('checkout_step', None)
-
-#         return redirect('home')
-
-#     return redirect('home')
 
 
 
@@ -353,3 +230,13 @@ def payment_success(request):
         return redirect('home')
 
     return redirect('home')
+
+
+
+def cart_quantity_api(request):
+    if request.user.is_authenticated:
+        cart = Cart.objects.filter(profile__user=request.user, active=True).first()
+        total_quantity = sum(item.quantity for item in cart.items.all()) if cart else 0
+        return JsonResponse({'quantity': total_quantity})
+    return JsonResponse({'quantity': 0})
+
