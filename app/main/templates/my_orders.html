@@ -1,16 +1,16 @@
-<h2 style="text-align: center; margin-bottom: 30px;">My Orders</h2>
+<div style="text-align: center; margin-bottom: 40px;font-size: 48px;margin-top: 50px;font-weight: bold;">My Orders</div>
 
 {% for order in orders %}
-<div style="border: 1px solid #e0e0e0; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-radius: 12px; padding: 20px; margin-bottom: 30px; background: #fff;">
-    <div style="display: flex; justify-content: space-between; align-items: center;">
+<div style="border: 1px solid #e0e0e0; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-radius: 12px; padding: 20px; margin-bottom: 30px; background: #fff;margin-left: 90px;margin-right: 60px;">
+    <div style="display: flex; align-items: center;gap: 400px;">
         <h3>Order {{ order.order_number }}</h3>
-        <h3 style="margin: 0;">Placed on: {{ order.created_at_ist|date:"d M Y h:i A" }}</h3>
+        <h3 style="margin-right: 0px;">Placed on: {{ order.created_at_ist|date:"d M Y h:i A" }}</h3>
         <span style="padding: 6px 12px; background-color: #007bff; color: white; border-radius: 20px; font-size: 14px;">{{ order.order_status }}</span>
     </div>
 
     <!-- New centered status bar -->
     <div style="display: flex; justify-content: center; align-items: center; margin: 30px 0;">
-        <div style="width: 60%; display: flex; justify-content: space-between; align-items: center;">
+        <div style="width: 30%; display: flex; justify-content: space-between; align-items: center;">
 
             <div style="text-align: center;">
                 <div style="width: 30px; height: 30px; border-radius: 50%; background-color: green; color: white; display: flex; align-items: center; justify-content: center; margin: auto;">✓</div>
@@ -39,7 +39,7 @@
     </div>
 
     <!-- Products Table -->
-    <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+    <table style="width: 80%; border-collapse: collapse; margin-top: 20px;margin-left: 160px;">
         <thead style="background-color: #f8f9fa;">
             <tr>
                 <th style="padding: 10px; border: 1px solid #dee2e6;">Image</th>
@@ -62,7 +62,7 @@
         </tbody>
     </table>
 
-    <div style="text-align: right; margin-top: 15px; font-weight: bold;">
+    <div style="margin-top: 15px; font-weight: bold;margin-left: 69rem;">
         Total: ₹{{ order.total_price }}
     </div>
 </div>

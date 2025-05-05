@@ -22,7 +22,7 @@
     <a href="{% url 'track_order' %}" style="font-size: 28px; color: black;"><i class="bi bi-truck"></i></a>
     
     <a href="#" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" onclick="loadCart()" class="position-relative">
-        <i class="bi bi-handbag" style="font-size: 1.5rem;"></i>
+        <i class="bi bi-handbag" style="font-size: 1.5rem;color: black;"></i>
         <span id="cart-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.7rem;">
             0
         </span>
@@ -73,14 +73,14 @@
 
 
 <!-- Navigation Links -->
-<div style="padding:10px; display:flex; gap:50px; flex-wrap:wrap; justify-content:flex-start; background:white; font-size:22px; font-weight:500; border-bottom:1px solid #eee; padding-left: 120px;">
+<div style="padding:10px; display:flex; gap:90px; flex-wrap:wrap; justify-content:flex-start; background:white; font-size:22px; font-weight:500; border-bottom:1px solid #eee; padding-left: 120px;">
     <a href="{%url 'shopall' %}" style="text-decoration:none; color:#333;">SHOP ALL</a>
     
 
 <div style="position:relative;">
     <a href="#" class="menu-link">INGREDIENTS<i class="bi bi-chevron-down"></i></a>
-    <div style="display:none; position:absolute; top:100%; left:0; background:white; box-shadow:0 4px 8px rgba(0,0,0,0.1); padding:10px; font-size:18px; z-index:100;" onmouseover="this.style.display='block'" onmouseout="this.style.display='none'">
-        <a href="{% url 'product_search' %}?q=vitamin%20c" style="display:block; color:#333; text-decoration:none; padding:5px 0;">Vitamin C</a>
+    <div style="display:none; position:absolute; top:100%; left:0; background:white; box-shadow:0 4px 8px rgba(0,0,0,0.1); padding-left:10px;padding-right: 10px; font-size:18px; z-index:100; " onmouseover="this.style.display='block'" onmouseout="this.style.display='none'">
+        <a href="{% url 'product_search' %}?q=vitamin%20c" style="display: block; color:#333; text-decoration:none; padding:5px 0;">Vitamin C</a>
         <a href="{% url 'product_search' %}?q=hyaluronic&q=ceramides" style="display:block; color:#333; text-decoration:none; padding:5px 0;">Hyaluronic + Ceramides</a>
         <a href="{% url 'product_search' %}?q=Niacinamide&q=cica" style="display:block; color:#333; text-decoration:none; padding:5px 0;">Niacinamide + CICA</a>
         <a href="{% url 'product_search' %}?q=watermelon&q=aha" style="display:block; color:#333; text-decoration:none; padding:5px 0;">Watermelon + AHA</a>
