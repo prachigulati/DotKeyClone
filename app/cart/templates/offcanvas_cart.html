@@ -32,14 +32,19 @@
         </div>
     </div>
 </div>
-{% empty %}
-    <p>Your cart is empty.</p>
-{% endfor %}
 
 <div class="border-top pt-3 mt-3 d-flex justify-content-between align-items-center">
     <h5>Total: ₹{{ totals }}</h5>
     <a href="{% url 'cart:checkout' %}" class="btn btn-success">Checkout</a>
 </div>
+{% empty %}
+    <p>Your cart is empty.</p>
+    
+<div class="border-top pt-3 mt-3 d-flex justify-content-between align-items-center">
+    <h5>Total: ₹{{ totals }}</h5>
+</div>
+{% endfor %}
+
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {

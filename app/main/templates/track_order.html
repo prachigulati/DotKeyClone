@@ -15,7 +15,7 @@
         }
         .container {
             max-width: 800px;
-            margin: 20px auto;
+            margin: 90px auto;
             background: white;
             padding: 40px;
             border-radius: 12px;
@@ -130,19 +130,18 @@
         </form>
 
     {% else %}
-        <div class="btn btn-success" style="margin-right: 1120px;">Delivered</div>
+        <div class="btn btn-success" style="margin-right: 1120px;"> {{ order.order_status }}</div>
         <h1>Order Details</h1>
         <div class="order-details">
             <p><strong>Order Number:</strong> {{ order.order_number }}</p>
             <p><strong>Placed on:</strong> {{ order.created_at|date:"d M Y, h:i A" }}</p>
             <p><strong>Username:</strong> {{ order.profile.user.username }}</p>
-            <!-- <p style="font-weight: bold;"><strong>Order Status:</strong> {{ order.order_status }}</p> -->
             <p><strong>Payment Method:</strong> {{ order.payment_method }}</p>
         </div>
         <div style="display: flex;flex-direction: row;gap: 10px;">
-        <div class="section">
+        <div class="section" style="width: 250px;height: 400px;" >
             <h3>Shipping Details</h3>
-            <p><strong>Name:</strong> {{ order.profile.user.get_full_name }}</p>
+            <p style="margin-top: 10px;"><strong>Name:</strong> {{ order.profile.user.get_full_name }}</p>
             <p><strong>Phone:</strong> {{ order.profile.phone }}</p>
             <p><strong>Address:</strong> {{ order.profile.address1 }}</p>
             <p><strong>City:</strong> {{ order.profile.city }}</p>
@@ -150,20 +149,31 @@
             <p><strong>Postal Code:</strong> {{ order.profile.zipcode }}</p>
         </div>
 
-        <div class="section">
+        <div class="section" style="width: 450px;height: 400px;overflow-y: auto;">
             <h3>Order Summary</h3>
             {% if order.cart.items.all %}
-                {% for item in order.cart.items.all %}
-                
-                    <div class="product-item">
-                        <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
-                        <div class="product-info">
-                            <div ><strong>{{ item.product.name }}</strong></div>
-                            <div style="margin-top: 40px;">Quantity: {{ item.quantity }}</div>
-                            <div style="margin-top: 40px;">Price: ₹{{ item.product.price }}</div>
-                        </div>
-                    </div>
-                {% endfor %}
+            <table style="width: 100px; border-collapse: collapse; margin-top: 20px;margin-left: 20px;">
+                <thead style="background-color: #f8f9fa;">
+                    <tr>
+                        <th style="padding: 10px; border: 1px solid #dee2e6;">Image</th>
+                        <th style="padding: 10px; border: 1px solid #dee2e6;">Product</th>
+                        <th style="padding: 10px; border: 1px solid #dee2e6;">Quantity</th>
+                        <th style="padding: 10px; border: 1px solid #dee2e6;">Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in order.cart.items.all %}
+                    <tr>
+                        <td style="padding: 8px; border: 1px solid #dee2e6; text-align: center;">
+                            <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" width="60" height="60" style="border-radius: 8px;">
+                        </td>
+                        <td style="padding: 8px; border: 1px solid #dee2e6;">{{ item.product.name }}</td>
+                        <td style="padding: 8px; border: 1px solid #dee2e6; text-align: center;">{{ item.quantity }}</td>
+                        <td style="padding: 8px; border: 1px solid #dee2e6;">₹{{ item.product.price }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
                 <p style="text-align: right; margin-top: 20px;"><strong>Total Price:</strong> ₹{{ order.total_price }}</p>
             {% else %}
                 <p>No products found in this order.</p>
