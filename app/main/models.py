@@ -18,7 +18,6 @@ class Profile(models.Model):
     state = models.CharField(max_length=200, blank=True)
     zipcode = models.CharField(max_length=200, blank=True)
     country = models.CharField(max_length=200, blank=True)
-    # old_cart = models.CharField(max_length=200, blank=True, null=True)
     old_cart = models.TextField(blank=True, null=True, default='{}')
     def __str__(self):
         return self.user.username
@@ -51,7 +50,6 @@ class Product(models.Model):
     description =  models.CharField(max_length=250,default=' ',blank=True, null=True)
     image = models.ImageField(upload_to='uploads/product/')
     tag=models.CharField(max_length=50)
-    # type=models.CharField(max_length=50)
     rating=models.DecimalField(default=0,decimal_places=2,max_digits=6)
     rating_next=models.DecimalField(default=0,decimal_places=2,max_digits=6)
     weight=models.CharField(max_length=50)
@@ -83,14 +81,13 @@ class Order(models.Model):
     profile = models.ForeignKey('Profile', on_delete=models.CASCADE)
     cart = models.ForeignKey('Cart', on_delete=models.SET_NULL, null=True, blank=True)
     total_price = models.DecimalField(max_digits=10, decimal_places=2)
-    payment_method = models.CharField(max_length=20)  # COD / Online
+    payment_method = models.CharField(max_length=20) 
     order_status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Placed')
-    created_at = models.DateTimeField(auto_now_add=True)  # Automatically set at order creation
-    updated_at = models.DateTimeField(auto_now=True)      # Automatically updates on changes
+    created_at = models.DateTimeField(auto_now_add=True) 
+    updated_at = models.DateTimeField(auto_now=True)     
     order_number = models.CharField(max_length=20, unique=True, blank=True, null=True)
     def save(self, *args, **kwargs):
         if not self.order_number:
-            # Generate a unique 5-digit+ number starting with #
             last_order = Order.objects.order_by('-id').first()
             if last_order and last_order.order_number:
                 try:
@@ -101,8 +98,6 @@ class Order(models.Model):
             else:
                 new_number = 10000
             self.order_number = f"#{new_number}"
-        
         super().save(*args, **kwargs)
-
     def __str__(self):
         return f"{self.order_number} - {self.profile.user.username} ({self.order_status})"

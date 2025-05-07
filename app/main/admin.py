@@ -28,11 +28,11 @@ admin.site.register(User, UserAdmin)
 
 class OrderAdmin(admin.ModelAdmin):
     list_display = ('order_number','profile', 'cart', 'total_price', 'payment_method', 'order_status', 'created_at')
-    list_editable = ('order_status',)  # <-- Editable directly from the list view
-    readonly_fields = ('created_at', 'cart_items_display')  # <-- Include cart_items_display here
+    list_editable = ('order_status',)  
+    readonly_fields = ('created_at', 'cart_items_display') 
     list_filter = ('order_status', 'payment_method')
     def cart_items_display(self, obj):
-        items = obj.cart.items.all()  # Get all cart items
+        items = obj.cart.items.all() 
         if not items:
             return "No items"
         html = "<table style='border:1px solid #ccc; border-collapse: collapse;'>"
@@ -40,7 +40,7 @@ class OrderAdmin(admin.ModelAdmin):
         for item in items:
             html += f"<tr><td style='border:1px solid #ccc; padding:5px;'>{item.product.name}</td><td style='border:1px solid #ccc; padding:5px;'>{item.quantity}</td></tr>"
         html += "</table>"
-        return mark_safe(html)  # Very important to mark the HTML as safe
-    cart_items_display.short_description = "Cart Items"  # Nice heading in the admin panel
+        return mark_safe(html)  
+    cart_items_display.short_description = "Cart Items" 
 
 admin.site.register(Order, OrderAdmin)

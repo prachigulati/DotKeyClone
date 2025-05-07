@@ -11,7 +11,7 @@ from django.utils.timezone import localtime
 def home(request):
     return render(request, 'home.html', {})
 
-
+#blog page
 def blog(request):
     return render(request, 'blog.html', {})
 
@@ -47,6 +47,9 @@ def Tpost1(request):
     return render(request, 'blogtemp/Tpost1.html', {})
 def Tpost2(request):
     return render(request, 'blogtemp/Tpost2.html', {})
+
+
+
 
 #search bar
 def search_products(request):

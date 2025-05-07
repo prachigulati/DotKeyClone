@@ -10,18 +10,13 @@
         <div class="d-flex justify-content-between align-items-center">
             <p class="mb-0">₹{{ product.sale_price|default:product.price }}</p>
             <div class="d-flex align-items-center">
-                <!-- Subtract Quantity -->
                 <form method="POST" action="{% url 'cart:update_cart' %}" class="cart-action-form">
                     {% csrf_token %}
                     <input type="hidden" name="product_id" value="{{ product.id }}">
                     <input type="hidden" name="action" value="subtract">
                     <button class="btn btn-sm btn-light" type="submit">-</button>
                 </form>
-
-                <!-- Display Quantity -->
                 <span class="mx-2">{{ quantities|get_item:product.id }}</span>
-
-                <!-- Add Quantity -->
                 <form method="POST" action="{% url 'cart:update_cart' %}" class="cart-action-form">
                     {% csrf_token %}
                     <input type="hidden" name="product_id" value="{{ product.id }}">

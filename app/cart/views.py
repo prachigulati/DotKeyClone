@@ -25,9 +25,7 @@ def cart_add(request):
             product = Product.objects.get(id=product_id)
         except Product.DoesNotExist:
             return JsonResponse({'status': 'error', 'error': 'Product not found'})
-        # Get or create active cart for the user
         cart, created = Cart.objects.get_or_create(profile=profile, active=True)
-        # Check if the item already exists in the cart
         cart_item, item_created = CartItem.objects.get_or_create(cart=cart, product=product)
         if not item_created:
             cart_item.quantity += product_qty
@@ -56,7 +54,6 @@ def cart_items_api(request):
 
 
 def cart_summary(request):
-    # Get the cart
     cart = Cart(request)
     cart_products = cart.get_prods
     quantities = cart.get_quants
@@ -65,9 +62,7 @@ def cart_summary(request):
 
 
 def cart_offcanvas(request):
-    # Ensure the cart is filtered by the user through the profile
     cart = Cart.objects.filter(profile__user=request.user, active=True).first()
-    
     if cart:
         cart_items = cart.items.select_related('product').all()
         cart_products = [item.product for item in cart_items]
@@ -77,7 +72,6 @@ def cart_offcanvas(request):
         cart_products = []
         quantities = {}
         totals = 0
-
     return render(request, 'offcanvas_cart.html', {
         'cart_products': cart_products,
         'quantities': quantities,
@@ -85,14 +79,13 @@ def cart_offcanvas(request):
     })
 
 
-
 @csrf_exempt 
 def update_cart(request):
     if request.method == 'POST':
         try:
-            product_id = request.POST.get('product_id')  # Get the product ID from the form
-            action = request.POST.get('action')  # The action (subtract, add, remove)
-            quantity = int(request.POST.get('quantity', 1))  # The quantity to add or subtract
+            product_id = request.POST.get('product_id')  
+            action = request.POST.get('action')  
+            quantity = int(request.POST.get('quantity', 1)) 
             product = Product.objects.get(id=product_id)
             cart = Cart.objects.get(profile__user=request.user, active=True)
             cart_item = CartItem.objects.get(cart=cart, product=product)
@@ -119,28 +112,22 @@ def update_cart(request):
 
 def checkout(request):
     profile = request.user.profile
-
     try:
         cart = Cart.objects.get(profile=profile, active=True)
         cart_items = cart.items.all()
     except Cart.DoesNotExist:
         cart = None
         cart_items = []
-
     total_price = sum(item.product.price * item.quantity for item in cart_items)
-    amount_in_paisa = int(total_price * 100)  # Razorpay expects paisa
-
+    amount_in_paisa = int(total_price * 100)  
     step = request.session.get('checkout_step', 1)
-
     if request.method == 'POST':
         action = request.POST.get('action')
-
         if action == 'save_mobile':
             profile.phone = request.POST.get('mobile_number')
             profile.save()
             request.session['checkout_step'] = 2
             return redirect('cart:checkout')
-
         elif action == 'save_address':
             profile.address1 = request.POST.get('address1')
             profile.address2 = request.POST.get('address2')
@@ -151,32 +138,27 @@ def checkout(request):
             profile.save()
             request.session['checkout_step'] = 3
             return redirect('cart:checkout')
-
         elif action == 'cod':
             if cart:
-                # Create Order for Cash on Delivery
                 order = Order.objects.create(
                     profile=profile,
                     cart=cart,
                     total_price=total_price,
                     payment_method='COD',
-                    order_status='Placed',  # Set order status
+                    order_status='Placed',
                 )
                 cart.active = False
                 cart.save()
                 request.session.pop('checkout_step', None)
-                return redirect('home')  # Redirect user to My Orders page after placing order
+                return redirect('home')  
             else:
                 return redirect('cart:checkout')
-
         elif action == 'go_back':
             request.session['checkout_step'] = 1
             return redirect('cart:checkout')
-
         elif action == 'go_back_address':
             request.session['checkout_step'] = 2
             return redirect('cart:checkout')
-
     razorpay_order = None
     if step == 3 and cart_items:
         client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
@@ -186,7 +168,6 @@ def checkout(request):
             "payment_capture": 1,
         }
         razorpay_order = client.order.create(data=DATA)
-
     context = {
         'cart_items': cart_items,
         'total_price': total_price,
@@ -205,15 +186,11 @@ def payment_success(request):
         payment_id = data.get('razorpay_payment_id')
         order_id = data.get('razorpay_order_id')
         signature = data.get('razorpay_signature')
-
         profile = request.user.profile
-
         try:
             cart = Cart.objects.get(profile=profile, active=True)
         except Cart.DoesNotExist:
             return redirect('cart:checkout')
-
-        # Create Order for online payment
         order = Order.objects.create(
             profile=profile,
             cart=cart,
@@ -221,14 +198,10 @@ def payment_success(request):
             payment_method='Online',
             order_status='Placed',
         )
-
         cart.active = False
         cart.save()
-
         request.session.pop('checkout_step', None)
-
         return redirect('home')
-
     return redirect('home')
 
 

@@ -7,13 +7,10 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 min-h-screen flex items-center justify-center">
-
     <div class="bg-white shadow-lg rounded-lg flex w-[90%] max-w-5xl overflow-hidden">
-        <!-- Left: Order Summary -->
         <div class="w-1/3 bg-gray-50 p-6 flex flex-col justify-between">
             <div>
                 <h2 class="text-xl font-semibold mb-4">Order Summary</h2>
-
                 {% for item in cart_items %}
                 <div class="flex items-center mb-4">
                     <img src="{{ item.product.image.url }}" alt="Product" class="w-16 h-16 mr-4 object-cover rounded">
@@ -24,7 +21,6 @@
                     </div>
                 </div>
                 {% endfor %}
-
                 <div class="border-t pt-4 mt-4">
                     <div class="flex justify-between">
                         <span>Subtotal</span>
@@ -46,10 +42,7 @@
                 </div>
             </div>
         </div>
-
-        <!-- Right: Checkout Steps -->
         <div class="w-2/3 p-8">
-            <!-- Step Indicator -->
             <div class="flex items-center mb-6 space-x-2">
                 {% if step == 1 %}
                     <div class="w-8 h-8 rounded-full bg-black text-white flex items-center justify-center">1</div>
@@ -74,8 +67,6 @@
                     <span class="font-semibold">Payment</span>
                 {% endif %}
             </div>
-
-            <!-- Contact Step -->
             {% if step == 1 %}
             <div>
                 <h2 class="text-2xl font-bold mb-4">Enter Mobile Number</h2>
@@ -95,7 +86,6 @@
                     </button>
                 </form>
             </div>
-            <!-- Address Step -->
         {% elif step == 2 %}
         <div>
             <h2 class="text-2xl font-bold mb-4">Enter Delivery Address</h2>
@@ -119,13 +109,11 @@
                 </div>
             </form>
         </div>
-
         {% elif step == 3 %}
         <div>
             <h2 class="text-2xl font-bold mb-4">Payment</h2>
             <form method="POST" id="payment-form">
                 {% csrf_token %}
-                
                 <div class="flex flex-col gap-4 mb-6">
                     <div class="flex items-center border rounded p-2">
                         <input type="radio" id="cod" name="payment_method" value="COD" class="mr-2" checked>
@@ -136,7 +124,6 @@
                         <label for="online" class="w-full">Pay Online (UPI / Card / Netbanking)</label>
                     </div>
                 </div>
-
                 <div class="flex space-x-4">
                     <button type="button" onclick="goBack()" class="border border-black text-black px-4 py-2 rounded">
                         ← Go Back
@@ -147,9 +134,7 @@
                 </div>
             </form>
         </div>
-
         <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-
         <script>
         function goBack() {
             const form = document.createElement('form');
@@ -159,14 +144,10 @@
             document.body.appendChild(form);
             form.submit();
         }
-
         document.getElementById('payment-form').addEventListener('submit', function(e) {
-            e.preventDefault();  // Prevent normal form submit
-
+            e.preventDefault();  
             var selectedMethod = document.querySelector('input[name="payment_method"]:checked').value;
-
             if (selectedMethod === 'COD') {
-                // Direct submit the form for COD
                 const codForm = document.createElement('form');
                 codForm.method = 'POST';
                 codForm.action = "";
@@ -175,7 +156,6 @@
                 codForm.submit();
             } 
             else if (selectedMethod === 'Online') {
-                // Open Razorpay
                 var options = {
                     "key": "{{ razorpay_key_id }}", 
                     "amount": "{{ razorpay_order.amount }}",
@@ -185,7 +165,6 @@
                     "image": "{% static 'assets/favicon.jpg' %}",
                     "order_id": "{{ razorpay_order.id }}",
                     "handler": function (response){
-                        // Payment Success -> Redirect to payment verification
                         window.location.href = "/payment_success/?payment_id=" + response.razorpay_payment_id;
                     },
                     "prefill": {
@@ -203,7 +182,6 @@
         });
         </script>
     {% endif %}
-
         </div>
     </div>
 </body>
