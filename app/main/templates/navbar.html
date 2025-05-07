@@ -12,10 +12,9 @@
 <!-- Search Bar -->
 <div style="display:flex; align-items:center; border:1px solid #000; border-radius:8px; padding:12px; width:300px; font-family:sans-serif; margin-left: 300px; position:relative;">
     <i class="bi bi-search" style="margin-right:8px;"></i>
-    <input type="text" id="searchInput" placeholder="Search" style="border:none; outline:none; font-size:16px; width:100%; font-weight:500; color:#333;" oninput="liveSearch()" autocomplete="off" />
-    <div id="suggestionBox" style="position:absolute; top:50px; left:0; width:500px; background:white; border:1px solid #ccc; border-radius:10px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); display:none; max-height:500px; overflow-y:auto; z-index:1000;"></div>
+    <input type="text" id="searchInput" placeholder="Search" style="border:none; outline:none;box-shadow: none; font-size:16px; width:100%; font-weight:500; color:#333;" oninput="liveSearch()" autocomplete="off" />
+    <div id="suggestionBox" style="position:absolute; top:50px; left:0; width:500px; background:white;  border-radius:10px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); display:none; max-height:500px; overflow-y:auto; z-index:1000;"></div>
 </div>
-
 <!-- Icons -->
 <div style="display:flex; gap:30px; font-size:28px;">
     {% if user.is_authenticated %}
@@ -106,7 +105,7 @@
 
 <a href="{% url 'bestsellers' %}" style="text-decoration:none; color:#333;">BEST SELLERS</a>
 <a href="{% url 'newarrivals' %}" style="text-decoration:none; color:#333;">NEW ARRIVALS</a>
-<a href="#" style="text-decoration:none; color:#333;">BLOGS</a>
+<a href="{% url 'blog' %}" style="text-decoration:none; color:#333;">BLOGS</a>
 </div>
 
 

@@ -12,6 +12,42 @@ def home(request):
     return render(request, 'home.html', {})
 
 
+def blog(request):
+    return render(request, 'blog.html', {})
+
+def post1(request):
+    return render(request, 'blogtemp/post1.html', {})
+def post2(request):
+    return render(request, 'blogtemp/post2.html', {})
+def post3(request):
+    return render(request, 'blogtemp/post3.html', {})
+def post4(request):
+    return render(request, 'blogtemp/post4.html', {})
+def Cpost1(request):
+    return render(request, 'blogtemp/Cpost1.html', {})
+def Cpost2(request):
+    return render(request, 'blogtemp/Cpost2.html', {})
+def Cpost3(request):
+    return render(request, 'blogtemp/Cpost3.html', {})
+def Mpost1(request):
+    return render(request, 'blogtemp/Mpost1.html', {})
+def Rpost1(request):
+    return render(request, 'blogtemp/Rpost1.html', {})
+def Rpost2(request):
+    return render(request, 'blogtemp/Rpost2.html', {})
+def Spost1(request):
+    return render(request, 'blogtemp/Spost1.html', {})
+def Spost2(request):
+    return render(request, 'blogtemp/Spost2.html', {})
+def Spost3(request):
+    return render(request, 'blogtemp/Spost3.html', {})
+def Spost4(request):
+    return render(request, 'blogtemp/Spost4.html', {})
+def Tpost1(request):
+    return render(request, 'blogtemp/Tpost1.html', {})
+def Tpost2(request):
+    return render(request, 'blogtemp/Tpost2.html', {})
+
 #search bar
 def search_products(request):
     query = request.GET.get('query', '')
@@ -122,7 +158,7 @@ def track_order(request):
     return render(request, 'track_order.html', {'order': order, 'error_message': error_message})
 
 
-import re
+import re 
 
 def slugify(text):
     return re.sub(r'[^a-z0-9]+', '-', text.lower()).strip('-')

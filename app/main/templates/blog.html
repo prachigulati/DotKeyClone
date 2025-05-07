@@ -1,0 +1,538 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+.card-container {
+  display: flex;
+  justify-content: space-between; 
+  flex-wrap: wrap;
+  row-gap: 30px; 
+  flex-wrap: wrap;
+  gap: 20px;
+  
+}
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+.card .tag {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: white;
+  border: 1px solid #eee;
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 13px;
+  font-weight: bold;
+}
+.card-text {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex-grow: 1;
+}
+.card-text h3 {
+  color: #ff1faf;
+  font-size: 18px;
+}
+
+.card-text p {
+  font-size: 14px;
+  color: #444;
+}
+
+.meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+}
+
+.read-more {
+  background: black;
+  color: white;
+  padding: 6px 14px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 14px;
+}
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background: #fff;
+}
+
+.tabs {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 30px;
+}
+
+.tab {
+  padding: 10px 20px;
+  border: none;
+  background: #ddd;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.tab.active {
+  background-color: #ff3cab;
+  color: white;
+}
+
+.card {
+  width: 320px;
+  background: #fff;
+  border-radius: 20px;
+  padding: 10px;
+  text-align: left;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card img {
+  width: 100%;
+  border-radius: 20px;
+}
+
+.tag {
+  display: inline-block;
+  background: #fff0f4;
+  color: #000;
+  font-size: 13px;
+  border: 1px solid #ff3cab;
+  border-radius: 12px;
+  padding: 4px 10px;
+  margin-top: 10px;
+}
+
+.card h3 {
+  font-size: 16px;
+  color: #ff3cab;
+  margin-top: 10px;
+}
+
+.blog-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start; 
+  align-items: flex-start;
+  gap: 40px;
+  flex-wrap: wrap;  
+}
+
+.blog-card {
+  width: 320px;
+  background-color: #fff;
+  text-align: left;
+}
+
+.blog-card img {
+  width: 100%;
+  height: auto;
+  border-radius: 16px;
+}
+
+.tag {
+  display: inline-block;
+  margin: 12px 0 5px;
+  padding: 5px 10px;
+  font-size: 12px;
+  color: #ff5d8f;
+  border: 1px solid #ff5d8f;
+  border-radius: 10px;
+  font-weight: bold;
+}
+
+.blog-title {
+  color: #ff2299;
+  font-size: 18px;
+  margin: 10px 0 8px;
+  font-weight: bold;
+}
+
+.blog-description {
+  font-size: 14px;
+  color: #444;
+  margin-bottom: 10px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.read-more-wrapper {
+  display: flex;
+  justify-content: space-between; 
+  align-items: center; 
+  margin-top: 10px; 
+}
+
+.author {
+  font-size: 14px;
+  color: #777;
+}
+
+
+.read-more {
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  padding: 6px 14px;
+}
+
+.read-more:hover {
+  text-decoration: underline;
+}
+
+/* new*/
+.trending-post {
+  padding: 60px 30px;
+}
+
+.trending-post h2 {
+  font-size: 2rem;
+  color:#ff1faf;
+  margin-bottom: 30px;
+  text-align: left;
+}
+
+
+.trending-card {
+  background-color: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease;
+}
+
+.card-card {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  padding: 20px 0;
+}
+
+.trending-card:hover {
+  transform: translateY(-5px);
+}
+
+.trending-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.card-text {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+
+}
+
+.card-text h3 {
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+  color: #ff1faf;
+}
+
+.card-text p {
+  font-size: 0.95rem;
+  color: #666;
+  margin-bottom: auto;
+}
+
+.meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  margin-top: 20px;
+  color: #999;
+}
+
+</style>
+
+  <section class="trending-post">
+    <h2>🔥 Trending Post</h2>
+    <div class="card-card">
+      <!--Initial trending-->
+      <!-- Card 1 --> 
+      <div class="trending-card">
+        
+        <img src="//www.dotandkey.com/cdn/shop/files/image_2_4e3cdf76-d898-4e29-bfbf-f532e3a5b9c0.png?v=1744868119" alt="Does Moisturizer Darken Skin? Read What Dermatologists Say!" loading="lazy">
+        <div class="card-text">
+          <h3>Does Moisturizer Darken Skin? Read What Dermatologists Say!</h3>
+          <p>
+            Heard moisturizer darkens skin? Let’s bust that skincare myth with real dermatologists' advice so you can hydrate without second-guessing it!
+          </p>
+          <div class="meta">
+            <span class="author">Tithi | 14 Apr 2025</span>
+            <a class="read-more" href="{% url 'post1' %}">Read More ›</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="trending-card">
+        
+        <img src="//www.dotandkey.com/cdn/shop/files/image_8c350577-45e2-4bb4-acd9-f3a75843e5f3.png?v=1744867123" alt="How to Use Salicylic Acid Serum: A Guide for Clear Skin" loading="lazy">
+        <div class="card-text">
+          <h3>How to Use Salicylic Acid Serum: A Guide for Clear Skin</h3>
+          <p>
+            Breakouts bugging you? Learn how to use salicylic acid serum the right way for clearer, smoother skin without overdoing or irritating it.
+          </p>
+          <div class="meta">
+            <span class="author">Tithi | 12 Apr 2025</span>
+            <a class="read-more" href="{% url 'post2' %}">Read More ›</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="trending-card">
+        
+        <img src="//www.dotandkey.com/cdn/shop/files/image_a971f559-2596-4ec8-8640-ebd32c0d30a9.png?v=1744782098" alt="Can We Apply Sunscreen at Night? Know The Real Facts!" loading="lazy">
+        <div class="card-text">
+          <h3>Can We Apply Sunscreen at Night? Know The Real Facts!</h3>
+          <p>
+            Can you use sunscreen at night? Uncover the real facts and decide if it’s a smart addition to your evening skincare routine with this guide!
+          </p>
+          <div class="meta">
+            <span class="author">Deep | 11 Apr 2025</span>
+            <a class="read-more" href="{% url 'post3' %}">Read More ›</a>
+          </div>
+        </div>
+      </div>
+      <!-- Card 4 -->
+      <div class="trending-card">
+        
+        <img src="//www.dotandkey.com/cdn/shop/files/image_7_b9e96ce8-d7e3-446c-897e-640a412071d4.png?v=1744958437" alt="How to Apply Vitamin C Serum: A Guide for Glowing Skin" loading="lazy">
+        <div class="card-text">
+          <h3>How to apply Vitamin C Serum: A guide for Glowing Skin</h3>
+          <p>
+            Want glowing skin with Vitamin C serum? Learn how to apply it the right way so your skin feels fresh, bright, and totally ready to shine.
+          </p>
+          <div class="meta">
+            <span class="author">Raj | 18 Apr 2025</span>
+            <a class="read-more" href="{% url 'post4' %}">Read More ›</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <nav class="tabs">
+    <button class="tab active" data-category="trending">Trending</button>
+    <button class="tab" data-category="sunscreens">Sunscreens</button>
+    <button class="tab" data-category="moisturizers">Moisturizers</button>
+    <button class="tab" data-category="skincare">Skin Care</button>
+    <button class="tab" data-category="routine">Routine</button>
+  </nav>
+  <section class="card-container">
+    <!--Trending-->
+    <!-- Card 1 -->
+    <div class="card category-trending">
+      <img src="//www.dotandkey.com/cdn/shop/files/image_9_d38491eb-5c8c-46ce-bb10-2a0b8380efeb.png?v=1745399105" alt="How to Use Salicylic Acid Face Wash?" loading="lazy">
+      <h3> How to Use Salicylic Acid Face Wash? A Step-By-Step Guide</h3>
+      <p>Using salicylic acid face wash the right way matters! Follow these easy steps to keep breakouts at bay and your skin feeling fresh and clear.</p>
+      <div class="meta">
+        <span class="author">Deep | 28 Apr 2025</span>
+        <a class="read-more" href="{% url 'Tpost1' %}">Read More ›</a>
+      </div>
+    </div>
+  
+    <!-- Card 2 -->
+    <div class="card category-trending">
+      <img src="//www.dotandkey.com/cdn/shop/files/image_7_e2dcc799-e2a5-4999-a814-bac0eb31ea13.png?v=1745391855" alt="Can You Use Salicylic Acid Face Wash Every Day?" loading="lazy">
+      <h3>Can You Use Salicylic Acid Face Wash Every Day?</h3>
+      <p>Wondering if it’s safe to use salicylic acid face wash daily? Let’s break it down so you can fight acne without drying or irritating your skin.</p>
+      <div class="meta">
+        <span class="author">Rashi | 27 Apr 2025</span>
+        <a class="read-more" href="{% url 'Tpost2' %}">Read More ›</a>
+      </div>
+    </div>
+  
+
+    <!--Sunscreens-->
+    <!--Card 1-->
+    <div class="card category-sunscreens">
+      <img src="//www.dotandkey.com/cdn/shop/files/image_5_de7aee83-ada8-419a-824d-34d64270c82d.png?v=1745390629" alt="How Long Does Sunscreen Last?" loading="lazy">
+      <h3>How Long Does Sunscreen Last? Guide to Application & Shelf Life</h3>
+      <p>This guide covers application tips and shelf life for maximum protection!</p>
+      <div class="meta">
+        <span class="author">Tithi | 26 Apr 2025</span>
+        <a class="read-more" href="{% url 'Spost1' %}">Read More ›</a>
+      </div>
+    </div>
+    <!-- Card 2 -->
+    <div class="card category-sunscreens">
+      <img src="//www.dotandkey.com/cdn/shop/files/image_38_6861fd1b-d861-4e5d-9583-a0c203abe53c.png?v=1745914115" alt="Does Sunscreen Cause Acne?" loading="lazy">
+      <h3>Does Sunscreen Cause Acne? Here’s What You Should Know!</h3>
+      <p>Find out what you should know about SPF and breakouts, plus tips for clear, protected skin every day!</p>
+      <div class="meta">
+        <span class="author">Deep | 26 Apr 2025</span>
+        <a class="read-more" href="{% url 'Spost2' %}">Read More ›</a>
+      </div>
+    </div>
+  <!-- Card 3 -->
+  <div class="blog-container" >
+  <div class="card category-sunscreens">
+    <img src="//www.dotandkey.com/cdn/shop/files/image_13_6424cc11-33f7-4ef5-bd3d-3a7a9b6b13ba.png?v=1745043298" alt="Should You Apply Sunscreen at Home?  Experts Explain!" loading="lazy">
+    <h3>Should You Apply Sunscreen at Home? Experts Explain!</h3>
+    <p>Should you wear sunscreen at home? Experts explain if SPF is needed indoors to shield your skin from UV damage effectively every day!</p>
+    <div class="meta">
+      <span class="author">Rashi | 20 Apr 2025</span>
+      <a class="read-more" href="{% url 'Spost3' %}">Read More ›</a>
+    </div>
+  </div>
+  <!-- Card 4 -->
+  <div class="card category-sunscreens">
+    <img src="//www.dotandkey.com/cdn/shop/files/image_19_39c7da68-f6be-48bc-90de-2ac9c7fe7b90.png?v=1745049134" alt="Can We Apply Sunscreen Directly?" loading="lazy">
+    <h3>Can We Apply Sunscreen Directly On Face? Guide to SPF Application</h3>
+    <p>This SPF application guide shows the best way to protect your skin effortlessly and effectively.</p>
+    <div class="meta">
+      <span class="author">Ekta | 25 Apr 2025</span>
+      <a class="read-more" href="{% url 'Spost4' %}">Read More ›</a>
+    </div>
+  </div>
+ 
+  
+    <!--Moisturizers-->
+
+    <!-- <div class="blog-container" > -->
+
+        <!-- Blog Card 1 -->
+        <div class="card category-moisturizers">
+          <img src="//www.dotandkey.com/cdn/shop/files/image_17_83d63883-1ffc-479c-adc0-a8f2f545f541.png?v=1745046408" alt="Can You Use Moisturizer at Night? Know What Experts Say!" loading="lazy">
+          <h3 class="blog-title">Can You Use Moisturizer at Night?<br> Know What Experts Say!</h3>
+          <p class="blog-description">
+            Thinking of using moisturizer at night? Here's what skin experts say about nighttime hydration and why your skin might love the extra care while you sleep!
+          </p>
+          <div class="read-more-wrapper">
+          <span class="author">Tithi | 20 Apr 2025</span>
+          
+        <a class="read-more" href="{% url 'Mpost1' %}">Read More ›</a>
+        </div>
+    </div>
+    
+        <!-- Blog Card 2 -->
+        <div class="card category-moisturizers">
+            <img src="//www.dotandkey.com/cdn/shop/files/image_2_4e3cdf76-d898-4e29-bfbf-f532e3a5b9c0.png?v=1744868119" alt="Does Moisturizer Darken Skin? Read What Dermatologists Say!" loading="lazy">
+          <h3 class="blog-title">Does Moisturizer Darken Skin? <br> Read What Dermatologists Say!</h3>
+          <p class="blog-description">
+            Heard moisturizer darkens skin? Let’s bust that skincare myth with real dermatologists' advice so you can hydrate without second-guessing it!
+          </p>
+          <div class="read-more-wrapper">
+          <span class="author">Tithi | 20 Apr 2025</span>
+        <a class="read-more" href="{% url 'post1' %}">Read More ›</a>
+        </div>
+        </div>
+
+        <!--Routine-->
+        <!--Card 1-->
+        <div class="card category-routine">
+            <img src="//www.dotandkey.com/cdn/shop/files/image_21_3d3c5675-d79a-4ed1-81dc-b334ebda1734.png?v=1745051845" alt="How to Apply Sunscreen and Moisturizer: A Step-by-Step Guide" loading="lazy">
+          <h3 class="blog-title">How to Apply Sunscreen and Moisturizer: A Step-by-Step Guide</h3>
+          <p class="blog-description">
+            Learn to apply sunscreen and moisturizer perfectly with this step-by-step guide for hydrated, sun-protected skin all day, every day!
+          </p>
+          <div class="read-more-wrapper">
+          <span class="author">Tithi | 20 Apr 2025</span>      
+          <a class="read-more" href="{% url 'Rpost1' %}" >Read More ›</a>
+        </div>
+        </div>
+
+        <!--Card 2-->
+        <div class="card category-routine">
+            <img src="//www.dotandkey.com/cdn/shop/files/image_1_12c8d2a1-68c6-428c-baa1-ac3668e46d3a.png?v=1744953844" alt="How to Use Face Wash Correctly: A Step-by-Step Guide" loading="lazy">    
+        <h3 class="blog-title">How to Use Face Wash Correctly: A Step-by-Step Guide</h3>
+          <p class="blog-description">
+            Think washing your face is foolproof? Not always! Here’s the right way to use face wash so your skin stays clean, happy, and breakout-free.
+          </p>
+          <div class="read-more-wrapper">
+          <span class="author">Tithi | 20 Apr 2025</span>      
+        <a class="read-more" href="{% url 'Rpost2' %}" >Read More ›</a>
+        </div>
+        </div>
+          
+        <!--Skin Care-->
+        <!--Card 1-->
+        <div class="card category-skincare">
+            <img src="//www.dotandkey.com/cdn/shop/files/image_3_ad064e10-4dc2-49bf-8db5-04c1fddee0e7.png?v=1746081738" alt="10 Radiant Benefits of Blood Orange for Your Skin" loading="lazy">        
+            <h3 class="blog-title">10 Radiant Benefits of Blood Orange for Your Skin</h3>
+          <p class="blog-description">
+            Blood orange is rich in vitamin C and AHAs that brighten skin, fight pigmentation, boost collagen, and leave your skin looking youthful and fresh.
+          </p>
+          <div class="read-more-wrapper">
+          <span class="author">Deep | 02 May 2025</span>      
+        <a class="read-more" href="{% url 'Cpost1' %}" >Read More ›</a>
+        </div>
+        </div>
+
+        <!--Card 2-->
+        <div class="card category-skincare">
+            <img src="//www.dotandkey.com/cdn/shop/files/image_1_69aae2a4-bc09-45ae-84a4-1f2e84ead5be.png?v=1746080256" alt="7 Powerful Benefits of Niacinamide Serum for Your Skin" loading="lazy">
+            <h3 class="blog-title">7 Powerful Benefits of Niacinamide Serum for Your Skin</h3>
+          <p class="blog-description">
+            Niacinamide serum helps minimize pores, control oil, fade acne marks, reduce redness, and strengthen your skin barrier with daily use.    
+        </p>
+          <div class="read-more-wrapper">
+          <span class="author">Tithi | 1 May 2025</span>      
+        <a class="read-more" href="{% url 'Cpost2' %}" >Read More ›</a>
+        </div>
+        </div>
+
+         <!--Card 3-->
+         <div class="card category-skincare">
+            <img src="//www.dotandkey.com/cdn/shop/files/image_3_6f56c4d8-9b94-49e9-8316-267bd3d5e062.png?v=1745928271" alt="How to Exfoliate Lips: Simple Steps for Soft, Smooth Lips" loading="lazy">
+            <h3 class="blog-title">How to Exfoliate Lips: Simple Steps for Soft, Smooth Lips</h3>
+          <p class="blog-description">
+            Dry, flaky lips? Here's how to exfoliate the right way for soft, smooth lips that look and feel amazing—no fuss, just easy lip care!
+        </p>
+          <div class="read-more-wrapper">
+          <span class="author">Raj | 30 Apr 2025</span>      
+        <a class="read-more" href="{% url 'Cpost3' %}" >Read More ›</a>
+        </div>
+        </div>
+
+  </section>
+  
+  <script>
+    const tabs = document.querySelectorAll('.tab');
+    const cards = document.querySelectorAll('.card');
+  
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        
+        tabs.forEach(t => t.classList.remove('active'));
+        
+        tab.classList.add('active');
+  
+        const category = tab.dataset.category;
+  
+        cards.forEach(card => {
+          if (category === 'trending') {
+            card.style.display = 'block';
+          } else {
+            card.style.display = card.classList.contains(`category-${category}`) ? 'block' : 'none';
+          }
+        });
+      });
+    });
+  </script>
+  
+
+
+{% endblock %}
